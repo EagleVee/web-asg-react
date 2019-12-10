@@ -1,0 +1,11 @@
+.view-center {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.not-found-text {
+    font-size: 30px;
+    font-weight: 300;
+}
