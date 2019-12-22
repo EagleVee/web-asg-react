@@ -3,9 +3,11 @@ import { connect } from "react-redux";
 import Container from "../Components/Container";
 import history from "../Navigation/History";
 import { Route, Router, Switch, Redirect } from "react-router-dom";
-import NotFoundPage from "./NotFoundPage";
 
 import StartupActions from "../Redux/StartupActions";
+
+import NotFoundPage from "./NotFoundPage";
+import LoginPage from "./LoginPage";
 
 class RootContainer extends Component {
   constructor(props) {
@@ -19,11 +21,19 @@ class RootContainer extends Component {
   render() {
     return (
       <Router history={history}>
-        <Container>
-          <Switch>
+        <Switch>
+          <Route
+            exact
+            path="/"
+            render={props => {
+              return <Redirect to="/login" />;
+            }}
+          />
+          <Route exact path="/login" component={LoginPage} />
+          <Container>
             <Route component={NotFoundPage} />
-          </Switch>
-        </Container>
+          </Container>
+        </Switch>
       </Router>
     );
   }

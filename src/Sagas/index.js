@@ -11,7 +11,6 @@ import {
   login,
   logoutToken,
   refreshToken,
-  register
 } from "./AuthSagas";
 
 export default function* root() {
@@ -21,5 +20,4 @@ export default function* root() {
   yield takeLatest(AuthTypes.REFRESH_TOKEN, refreshToken);
   yield takeLatest(AuthTypes.LOGIN, login);
   yield takeLatest(AuthTypes.LOGOUT_TOKEN, logoutToken);
-  yield takeLatest(AuthTypes.REGISTER, register);
 }

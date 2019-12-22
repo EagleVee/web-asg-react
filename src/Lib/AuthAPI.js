@@ -7,7 +7,7 @@ const API = {
     }
   },
   login: (username, password) => {
-    const path = "/login";
+    const path = "/auth/login";
     const data = {
       username: username,
       password: password
@@ -15,7 +15,7 @@ const API = {
     return POST(path, data);
   },
   logout: () => {
-    const path = "/logout";
+    const path = "/auth/logout";
     return POST(path);
   }
 };

@@ -1,17 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import "./Styles/NotFoundPage.css";
+import "./Styles/NotFoundPage.module.css";
 
 class PostPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      uuid: null,
-      postInput: "",
-      files: [],
-      commentPage: 0,
-      isCommentLoading: false,
-      isPostLoading: false
     };
   }
 
