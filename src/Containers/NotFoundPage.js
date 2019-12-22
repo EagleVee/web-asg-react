@@ -1,18 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import "./Styles/NotFoundPage.module.css";
+import styles from "./Styles/NotFoundPage.module.css";
 
-class PostPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
-
+class NotFoundPage extends Component {
   render() {
     return (
-      <div className="view-center">
-        <p className="not-found-text">404 Not Found</p>
+      <div className={styles.viewCenter}>
+        <p className={styles.notFoundText}>404 Not Found</p>
       </div>
     );
   }
@@ -26,4 +20,4 @@ const mapDispatchToProps = dispatch => {
   return {};
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PostPage);
+export default connect(mapStateToProps, mapDispatchToProps)(NotFoundPage);
