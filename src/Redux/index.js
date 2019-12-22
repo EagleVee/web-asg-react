@@ -3,15 +3,10 @@ import configureStore from "./CreateStore";
 import rootSaga from "../Sagas/";
 
 import { reducer as AuthReducer } from "./AuthReducer";
-import { reducer as ConversationReducer } from "./ConversationReducer";
-import { reducer as TimelineReducer } from "./TimelineReducer";
-import { reducer as NotificationReducer } from "./NotificationReducer";
+
 /* ------------- Assemble The Reducers ------------- */
 export const reducers = combineReducers({
-  auth: AuthReducer,
-  conversation: ConversationReducer,
-  timeline: TimelineReducer,
-  notification: NotificationReducer
+  auth: AuthReducer
 });
 
 export default () => {
