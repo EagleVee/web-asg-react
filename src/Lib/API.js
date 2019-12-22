@@ -1,5 +1,12 @@
 import axios from "axios";
 import * as qs from "query-string";
+import AuthAPI from "./AuthAPI";
+import ClassAPI from "./ClassAPI";
+import ShiftAPI from "./ShiftAPI";
+import ShiftRoomAPI from "./ShiftRoomAPI";
+import RoomAPI from "./RoomAPI";
+import UserAPI from "./UserAPI"
+
 
 import {
   API_ENDPOINT,
@@ -10,7 +17,7 @@ import {
   STATUS_UNAUTHORIZED
 } from "../Config/Remote";
 
-const instance = axios.create({
+export const instance = axios.create({
   baseURL: API_ENDPOINT,
   timeout: REQUEST_TIME_OUT,
   headers: {}
@@ -77,7 +84,12 @@ export const DELETE = (url, config = {}) => {
 };
 
 const API = {
-
+  auth: AuthAPI,
+  shift: ShiftAPI,
+  room: RoomAPI,
+  user: UserAPI,
+  shiftRoom: ShiftRoomAPI,
+  class: ClassAPI
 };
 
 export default API;
