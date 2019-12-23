@@ -3,10 +3,14 @@ import configureStore from "./CreateStore";
 import rootSaga from "../Sagas/";
 
 import { reducer as AuthReducer } from "./AuthReducer";
+import { reducer as ClassReducer } from "./ClassReducer";
+import { reducer as ShiftReducer } from "./ShiftReducer";
 
 /* ------------- Assemble The Reducers ------------- */
 export const reducers = combineReducers({
-  auth: AuthReducer
+  auth: AuthReducer,
+  class: ClassReducer,
+  shift: ShiftReducer
 });
 
 export default () => {
