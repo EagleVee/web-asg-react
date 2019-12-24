@@ -50,6 +50,7 @@
     "react-router-dom": "^5.1.2",
     "react-script": "^2.0.5",
     "react-scripts": "^3.2.0",
+    "react-table": "^7.0.0-rc.15",
     "redux": "^4.0.4",
     "redux-saga": "^1.1.1",
     "reduxsauce": "^1.1.0",

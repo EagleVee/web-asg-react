@@ -9,7 +9,7 @@ class LoginPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "",
+      username: "",
       password: "",
       error: ""
     };
@@ -108,7 +108,9 @@ class LoginPage extends Component {
   doLogin = () => {
     const { username, password } = this.state;
     const { login } = this.props;
-    login(username, password, this.loginOnSuccess, this.loginOnFailed);
+    if (username.length > 0 && password.length > 0) {
+      login(username, password, this.loginOnSuccess, this.loginOnFailed);
+    }
   };
 
   loginOnSuccess = () => {
