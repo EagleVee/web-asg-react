@@ -8,6 +8,8 @@ import StartupActions from "../Redux/StartupActions";
 
 import NotFoundPage from "./NotFoundPage";
 import LoginPage from "./LoginPage";
+import SubjectList from "./SubjectList";
+
 
 class RootContainer extends Component {
   constructor(props) {
@@ -31,6 +33,7 @@ class RootContainer extends Component {
           />
           <Route exact path="/login" component={LoginPage} />
           <Container>
+            <Route exact path="/message" component={SubjectList}/>
             <Route component={NotFoundPage} />
           </Container>
         </Switch>

@@ -49,12 +49,12 @@ class Container extends Component {
           title={
             <span>
               <Icon type="message" style={{ fontSize: 20 }} />
-              <span>Tin nhắn</span>
+              <span>Dang ky thi</span>
             </span>
           }
         >
           <Menu.Item key="message">
-            <Link to="/message">Tất cả tin nhắn</Link>
+            <Link to="/message">Danh sach dang ky</Link>
           </Menu.Item>
         </Menu.SubMenu>
       </Menu>
