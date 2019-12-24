@@ -10,16 +10,20 @@ import NotFoundPage from "./NotFoundPage";
 import LoginPage from "./LoginPage";
 import SubjectList from "./SubjectList";
 import PrivateRoute from "../Navigation/PrivateRoute";
+import LoadingIndicator from "../Components/LoadingIndicator";
 
 class RootContainer extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      isLoading: true
+    };
   }
 
   render() {
     const { isAuthenticated } = this.props.auth;
-    return (
+    console.log(isAuthenticated);
+    return !this.state.isLoading ? (
       <Router history={history}>
         <Switch>
           <Route
@@ -41,12 +45,20 @@ class RootContainer extends Component {
           <Route component={NotFoundPage} />
         </Switch>
       </Router>
+    ) : (
+      <LoadingIndicator />
     );
   }
 
   componentDidMount() {
-    this.props.startup();
+    this.props.startup(this.startupDone);
   }
+
+  startupDone = () => {
+    this.setState({
+      isLoading: false
+    });
+  };
 }
 
 const mapStateToProps = state => ({
@@ -54,7 +66,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  startup: () => dispatch(StartupActions.startup())
+  startup: callback => dispatch(StartupActions.startup(callback))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RootContainer);

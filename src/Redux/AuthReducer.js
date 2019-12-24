@@ -4,7 +4,9 @@ import { AuthTypes } from "./AuthActions";
 
 export const INITIAL_STATE = Immutable({
   isAuthenticated: false,
-  user: {}
+  user: {
+    role: ""
+  },
 });
 
 export const loginSuccess = (state, action) => {
@@ -17,16 +19,17 @@ export const loginSuccess = (state, action) => {
 };
 
 export const validateTokenSuccess = (state, action) => {
-  const { response } = action;
+  const { data } = action.response;
   return state.merge({
-    isAuthenticated: response.data.is_alive
+    isAuthenticated: data.is_alive
   });
 };
 
 export const meSuccess = (state, action) => {
   const { data } = action.response;
   return state.merge({
-    user: data
+    user: data,
+    isAuthenticated: true
   });
 };
 
@@ -39,7 +42,9 @@ export const refreshTokenSuccess = (state, action) => {
 export const logoutTokenSuccess = (state, action) => {
   return state.merge({
     isAuthenticated: false,
-    user: {}
+    user: {
+      role: ""
+    }
   });
 };
 

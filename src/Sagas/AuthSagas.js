@@ -1,13 +1,15 @@
 import API from "../Lib/API";
 import { call, put } from "redux-saga/effects";
 import AuthActions from "../Redux/AuthActions";
+import CookieHelper from "../Common/CookieHelper";
 
 export function* login(action) {
   const { username, password, onSuccess, onFailed } = action;
   const response = yield call(API.auth.login, username, password);
   if (response.status) {
     const accessToken = response.data.accessToken;
-    API.auth.setAccessToken(accessToken)
+    API.auth.setAccessToken(accessToken);
+    yield call(CookieHelper.set, "accessToken", accessToken);
     if (onSuccess) yield call(onSuccess);
     yield put(AuthActions.loginSuccess(response));
   } else {
@@ -17,11 +19,8 @@ export function* login(action) {
 
 export function* validateToken(action) {
   const response = yield call(API.validateToken);
-  const { data } = response;
   if (response.status) {
-    if (data.is_alive === true) {
-      yield put(AuthActions.refreshToken());
-    }
+    yield put(AuthActions.validateTokenSuccess(response));
   }
 }
 
@@ -43,8 +42,12 @@ export function* logoutToken(action) {
 }
 
 export function* me(action) {
-  const response = yield call(API.me);
+  const { onSuccess, onFailed } = action;
+  const response = yield call(API.auth.me);
   if (response.status) {
     yield put(AuthActions.meSuccess(response));
+    if (onSuccess) yield call(onSuccess);
+  } else {
+    if (onFailed) yield call(onFailed);
   }
 }

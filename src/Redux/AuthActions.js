@@ -5,7 +5,7 @@ const { Types, Creators } = createActions({
   loginSuccess: ["response"],
   validateToken: [],
   validateTokenSuccess: ["response"],
-  me: [],
+  me: ["onSuccess", "onFailed"],
   meSuccess: ["response"],
   refreshToken: [],
   refreshTokenSuccess: ["response"],

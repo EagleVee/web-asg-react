@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Icon, Layout, Menu } from "antd";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import NoImage from "../Images/no_image_available_10.png";
 import styles from "./Styles/Container.module.css";
 import { connect } from "react-redux";
 

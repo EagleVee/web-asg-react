@@ -3,7 +3,7 @@ import { createActions } from "reduxsauce";
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
-  startup: null
+  startup: ["callback"]
 });
 
 export const StartupTypes = Types;

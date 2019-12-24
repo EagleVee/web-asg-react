@@ -54,7 +54,8 @@
     "redux": "^4.0.4",
     "redux-saga": "^1.1.1",
     "reduxsauce": "^1.1.0",
-    "seamless-immutable": " ^7.1.4"
+    "seamless-immutable": " ^7.1.4",
+    "universal-cookie": "^4.0.2"
   },
   "browserslist": {
     "production": [

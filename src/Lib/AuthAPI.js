@@ -17,6 +17,14 @@ const API = {
   logout: () => {
     const path = "/auth/logout";
     return POST(path);
+  },
+  me: () => {
+    const path = "/auth/me";
+    return GET(path);
+  },
+  validateToken: () => {
+    const path = "/auth/token/validate";
+    return GET(path);
   }
 };
 
