@@ -46,14 +46,14 @@ class Container extends Component {
             this.props.menuOnClick("conversation");
           }}
           title={
-            <span>
-              <Icon type="message" style={{ fontSize: 20 }} />
-              <span>Dang ky thi</span>
+            <span className={styles.viewCenter}>
+              <Icon type="calendar" style={{ fontSize: 16 }} />
+              <span>Đăng ký thi</span>
             </span>
           }
         >
           <Menu.Item key="message">
-            <Link to="/message">Danh sach dang ky</Link>
+            <Link to="/message">Danh sách đăng ký</Link>
           </Menu.Item>
         </Menu.SubMenu>
       </Menu>
@@ -61,8 +61,7 @@ class Container extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-});
+const mapStateToProps = state => ({});
 
 const mapDispatchToProps = dispatch => ({});
 
