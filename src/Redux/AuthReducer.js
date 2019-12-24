@@ -3,7 +3,7 @@ import { createReducer } from "reduxsauce";
 import { AuthTypes } from "./AuthActions";
 
 export const INITIAL_STATE = Immutable({
-  isAuthenticated: true,
+  isAuthenticated: false,
   user: {}
 });
 

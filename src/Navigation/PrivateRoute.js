@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import { Route, Redirect } from "react-router-dom";
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
-  const { isAuthenticated } = this.props.auth;
+const PrivateRoute = ({ component: Component, isAuthenticated: isAuthenticated, ...rest }) => {
   return (
     <Route
       {...rest}
@@ -17,8 +16,4 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  auth: state.auth
-});
-
-export default connect(mapStateToProps)(PrivateRoute);
+export default PrivateRoute;

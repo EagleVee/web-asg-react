@@ -9,18 +9,16 @@ import StartupActions from "../Redux/StartupActions";
 import NotFoundPage from "./NotFoundPage";
 import LoginPage from "./LoginPage";
 import SubjectList from "./SubjectList";
-
+import PrivateRoute from "../Navigation/PrivateRoute";
 
 class RootContainer extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      messageNotification: false,
-      timelineNotification: false
-    };
+    this.state = {};
   }
 
   render() {
+    const { isAuthenticated } = this.props.auth;
     return (
       <Router history={history}>
         <Switch>
@@ -33,9 +31,14 @@ class RootContainer extends Component {
           />
           <Route exact path="/login" component={LoginPage} />
           <Container>
-            <Route exact path="/message" component={SubjectList}/>
-            <Route component={NotFoundPage} />
+            <PrivateRoute
+              exact
+              path="/message"
+              component={SubjectList}
+              isAuthenticated={isAuthenticated}
+            />
           </Container>
+          <Route component={NotFoundPage} />
         </Switch>
       </Router>
     );
@@ -46,7 +49,9 @@ class RootContainer extends Component {
   }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  auth: state.auth
+});
 
 const mapDispatchToProps = dispatch => ({
   startup: () => dispatch(StartupActions.startup())
