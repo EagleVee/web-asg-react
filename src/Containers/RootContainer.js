@@ -8,7 +8,7 @@ import StartupActions from "../Redux/StartupActions";
 
 import NotFoundPage from "./NotFoundPage";
 import LoginPage from "./LoginPage";
-import SubjectList from "./SubjectList";
+import ClassPage from "./ClassPage";
 import PrivateRoute from "../Navigation/PrivateRoute";
 import LoadingIndicator from "../Components/LoadingIndicator";
 
@@ -37,8 +37,8 @@ class RootContainer extends Component {
           <Container>
             <PrivateRoute
               exact
-              path="/message"
-              component={SubjectList}
+              path="/class"
+              component={ClassPage}
               isAuthenticated={isAuthenticated}
             />
           </Container>
