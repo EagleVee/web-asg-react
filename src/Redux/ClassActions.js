@@ -1,7 +1,7 @@
 import { createActions } from "reduxsauce";
 
 const { Types, Creators } = createActions({
-  getListClass: [],
+  getListClass: ["params", "onSuccess", "onFailed"],
   getListClassSuccess: ["response"]
 });
 

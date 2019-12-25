@@ -1,8 +1,12 @@
 *:focus {
   outline: 0;
-  box-shadow: 0 0 0 1px rgba(0, 123, 255, .5);
+  box-shadow: 0 0 0 1px rgba(0, 123, 255, 0.5);
 }
 
 p {
+  margin: 0 0;
+}
+
+.row {
   margin: 0 0;
 }

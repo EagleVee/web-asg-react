@@ -1,10 +1,28 @@
 import React, { Component } from "react";
 import styles from "./Styles/ClassPage.module.css";
-import { Table, Divider } from "antd";
+import { Table, Divider, Icon } from "antd";
+import ClassActions from "../Redux/ClassActions";
+import { connect } from "react-redux";
 
 class ClassPage extends Component {
   render() {
-    return <div>{this.renderTable()}</div>;
+    return (
+      <div>
+        {this.renderHeader()}
+        {this.renderTable()}
+      </div>
+    );
+  }
+
+  renderHeader() {
+    return (
+      <div className="row">
+        <p>Nhập liệu</p>
+        <button className={`btn ${styles.button}`}>
+          <Icon type="upload" style={{ fontSize: 20 }} />
+        </button>
+      </div>
+    );
   }
 
   renderTable() {
@@ -17,10 +35,8 @@ class ClassPage extends Component {
       {
         title: "Tên môn học",
         dataIndex: "name",
-        key: "name",
-        render: text => <a>{text}</a>
+        key: "name"
       },
-
       {
         title: "Giảng viên",
         dataIndex: "lecturer",
@@ -28,19 +44,33 @@ class ClassPage extends Component {
       }
     ];
 
-    return (
-      <Table
-        columns={columns}
-        dataSource={[
-          {
-            code: "INT1234",
-            name: "Phát triển ứng dụng web",
-            lecturer: "Lê Đình Thanh"
-          }
-        ]}
-      />
-    );
+    const { listClass } = this.props.class;
+
+    return <Table columns={columns} dataSource={listClass} />;
+  }
+
+  getListClass = () => {
+    const { getListClass } = this.props;
+    getListClass();
+  };
+
+  componentDidMount() {
+    this.getListClass();
   }
 }
 
-export default ClassPage;
+const mapStateToProps = state => {
+  return {
+    auth: state.auth,
+    class: state.class
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    getListClass: (params, onSuccess, onFailed) =>
+      dispatch(ClassActions.getListClass(params, onSuccess, onFailed))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ClassPage);
