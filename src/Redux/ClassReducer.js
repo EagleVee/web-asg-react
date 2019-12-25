@@ -20,7 +20,16 @@ export const getClassDetailSuccess = (state, action) => {
   });
 };
 
+export const uploadListClassSuccess = (state, action) => {
+  const { data } = action.response;
+  return state.merge({
+    listClass: data
+  });
+};
+
 export const reducer = createReducer(INITIAL_STATE, {
   [ClassTypes.GET_LIST_CLASS_SUCCESS]: getListClassSuccess,
-  [ClassTypes.GET_CLASS_DETAIL_SUCCESS]: getClassDetailSuccess
+  [ClassTypes.GET_CLASS_DETAIL_SUCCESS]: getClassDetailSuccess,
+  [ClassTypes.UPLOAD_LIST_CLASSS_SUCCESS]: uploadListClassSuccess
+
 });

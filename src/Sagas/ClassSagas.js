@@ -23,3 +23,14 @@ export function* getClassDetail(action) {
     if (onFailed) yield call(onFailed);
   }
 }
+
+export function* uploadListClass(action) {
+  const { data, onSuccess, onFailed } = action;
+  const response = yield call(API.class.upload, data);
+  if (response.status) {
+    yield put(ClassActions.uploadListClassSuccess(response));
+    if (onSuccess) yield call(onSuccess);
+  } else {
+    if (onFailed) yield call(onFailed);
+  }
+}

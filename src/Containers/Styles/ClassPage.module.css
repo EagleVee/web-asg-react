@@ -13,3 +13,14 @@
   justify-content: flex-end;
   padding: 0 10px;
 }
+
+.previewContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.previewText {
+  text-decoration-line: underline;
+  color: dimgrey;
+}

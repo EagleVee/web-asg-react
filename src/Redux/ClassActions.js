@@ -4,7 +4,9 @@ const { Types, Creators } = createActions({
   getListClass: ["params", "onSuccess", "onFailed"],
   getListClassSuccess: ["response"],
   getClassDetail: ["id", "onSuccess", "onFailed"],
-  getClassDetailSuccess: ["response"]
+  getClassDetailSuccess: ["response"],
+  uploadListClass: ["data", "onSuccess", "onFailed"],
+  uploadListClassSuccess: ["response"]
 });
 
 export const ClassTypes = Types;
