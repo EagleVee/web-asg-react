@@ -9,6 +9,7 @@ import StartupActions from "../Redux/StartupActions";
 import NotFoundPage from "./NotFoundPage";
 import LoginPage from "./LoginPage";
 import ClassPage from "./ClassPage";
+import ShiftPage from './ShiftPage';
 import PrivateRoute from "../Navigation/PrivateRoute";
 import LoadingIndicator from "../Components/LoadingIndicator";
 import ClassDetailPage from "./ClassDetailPage";
@@ -46,6 +47,13 @@ class RootContainer extends Component {
               exact
               path="/class/:id"
               component={ClassDetailPage}
+              isAuthenticated={isAuthenticated}
+            />
+
+            <PrivateRoute
+              exact
+              path="/shift"
+              component={ShiftPage}
               isAuthenticated={isAuthenticated}
             />
           </Container>
