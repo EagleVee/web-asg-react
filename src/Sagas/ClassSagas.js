@@ -12,3 +12,14 @@ export function* getListClass(action) {
     if (onFailed) yield call(onFailed);
   }
 }
+
+export function* getClassDetail(action) {
+  const { id, onSuccess, onFailed } = action;
+  const response = yield call(API.class.getDetail, id);
+  if (response.status) {
+    yield put(ClassActions.getClassDetailSuccess(response));
+    if (onSuccess) yield call(onSuccess);
+  } else {
+    if (onFailed) yield call(onFailed);
+  }
+}

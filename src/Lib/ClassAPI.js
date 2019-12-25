@@ -6,6 +6,10 @@ const API = {
     const queryString = qs.stringify(params);
     return GET(path + "?" + queryString);
   },
+  getDetail: id => {
+    const path = "/class/" + id;
+    return GET(path);
+  },
   create: data => {
     const path = "/class";
     return POST(path, data);

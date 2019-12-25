@@ -11,6 +11,7 @@ import LoginPage from "./LoginPage";
 import ClassPage from "./ClassPage";
 import PrivateRoute from "../Navigation/PrivateRoute";
 import LoadingIndicator from "../Components/LoadingIndicator";
+import ClassDetailPage from "./ClassDetailPage";
 
 class RootContainer extends Component {
   constructor(props) {
@@ -39,6 +40,12 @@ class RootContainer extends Component {
               exact
               path="/class"
               component={ClassPage}
+              isAuthenticated={isAuthenticated}
+            />
+            <PrivateRoute
+              exact
+              path="/class/:id"
+              component={ClassDetailPage}
               isAuthenticated={isAuthenticated}
             />
           </Container>

@@ -13,6 +13,14 @@ export const getListClassSuccess = (state, action) => {
   });
 };
 
+export const getClassDetailSuccess = (state, action) => {
+  const { data } = action.response;
+  return state.merge({
+    [data._id]: data
+  });
+};
+
 export const reducer = createReducer(INITIAL_STATE, {
-  [ClassTypes.GET_LIST_CLASS_SUCCESS]: getListClassSuccess
+  [ClassTypes.GET_LIST_CLASS_SUCCESS]: getListClassSuccess,
+  [ClassTypes.GET_CLASS_DETAIL_SUCCESS]: getClassDetailSuccess
 });

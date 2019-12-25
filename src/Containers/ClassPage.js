@@ -16,11 +16,16 @@ class ClassPage extends Component {
 
   renderHeader() {
     return (
-      <div className="row">
-        <p>Nhập liệu</p>
-        <button className={`btn ${styles.button}`}>
-          <Icon type="upload" style={{ fontSize: 20 }} />
-        </button>
+      <div className={styles.header}>
+        <p>Tải lên danh sách môn học</p>
+        <label>
+          <input type="file" className="d-none" />
+          <Icon
+            type="upload"
+            style={{ fontSize: 20 }}
+            className={`btn ${styles.button}`}
+          />
+        </label>
       </div>
     );
   }
@@ -46,7 +51,20 @@ class ClassPage extends Component {
 
     const { listClass } = this.props.class;
 
-    return <Table columns={columns} dataSource={listClass} />;
+    return (
+      <Table
+        columns={columns}
+        dataSource={listClass}
+        onRow={(record, index) => {
+          return {
+            onClick: event => {
+              event.preventDefault();
+              this.props.history.push("/class/" + record._id);
+            }
+          };
+        }}
+      />
+    );
   }
 
   getListClass = () => {
