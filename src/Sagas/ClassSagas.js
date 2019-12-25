@@ -29,8 +29,9 @@ export function* uploadListClass(action) {
   const response = yield call(API.class.upload, data);
   if (response.status) {
     yield put(ClassActions.uploadListClassSuccess(response));
-    if (onSuccess) yield call(onSuccess);
+    if (onSuccess) yield call(onSuccess, "Tải tệp lên máy chủ thành công");
   } else {
-    if (onFailed) yield call(onFailed);
+    if (onFailed) yield call(onFailed, "Đã có lỗi xảy ra, vui lòng thử lại");
   }
 }
+

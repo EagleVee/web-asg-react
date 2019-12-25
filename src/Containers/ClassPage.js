@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import styles from "./Styles/ClassPage.module.css";
-import { Table, Divider, Icon } from "antd";
+import { Table, Divider, Icon, Spin } from "antd";
 import { connect } from "react-redux";
 import FormData from "form-data";
 import ClassActions from "../Redux/ClassActions";
@@ -12,7 +12,8 @@ class ClassPage extends Component {
     super(props);
     this.state = {
       file: {},
-      uploadModalVisible: false
+      uploadModalVisible: false,
+      uploading: false
     };
   }
   render() {
@@ -82,7 +83,7 @@ class ClassPage extends Component {
   }
 
   renderUploadModal = () => {
-    const { uploadModalVisible, file } = this.state;
+    const { uploadModalVisible, file, uploading } = this.state;
     const renderPreview = () => {
       if (!file.name) {
         return <div />;
@@ -114,35 +115,50 @@ class ClassPage extends Component {
           });
         }}
       >
-        <label>
-          Chọn tệp từ máy tính
-          <input
-            type="file"
-            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            className="d-none"
-            onChange={event => {
-              if (event.target.files && event.target.files.length > 0) {
-                this.setState({
-                  file: event.target.files[0]
-                });
-              }
-            }}
-          />
-          <Icon
-            type="upload"
-            style={{ fontSize: 20 }}
-            className={`btn ${styles.button}`}
-          />
-        </label>
-        {renderPreview()}
+        <Spin spinning={uploading}>
+          <label>
+            Chọn tệp từ máy tính
+            <input
+              type="file"
+              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+              className="d-none"
+              onChange={event => {
+                if (event.target.files && event.target.files.length > 0) {
+                  this.setState({
+                    file: event.target.files[0]
+                  });
+                }
+              }}
+            />
+            <Icon
+              type="upload"
+              style={{ fontSize: 20 }}
+              className={`btn ${styles.button}`}
+            />
+          </label>
+          {renderPreview()}
+        </Spin>
       </UploadModal>
     );
   };
 
   handleOnUpload = () => {
+    this.setState(
+      {
+        uploading: true
+      },
+      () => {
+        this.uploadFile();
+      }
+    );
+  };
+
+  uploadFile = () => {
+    const { uploadListClass } = this.props;
     const { file } = this.state;
     const formData = new FormData();
     formData.append("file", file);
+    uploadListClass(formData, this.onSuccess, this.onFailed);
   };
 
   getListClass = () => {
@@ -151,15 +167,31 @@ class ClassPage extends Component {
   };
 
   onSuccess = message => {
-    ModalHelper.showSuccessModal({
-      content: message
-    });
+    this.setState(
+      {
+        uploadModalVisible: false,
+        uploading: false
+      },
+      () => {
+        ModalHelper.showSuccessModal({
+          content: message
+        });
+      }
+    );
   };
 
   onFailed = message => {
-    ModalHelper.showErrorModal({
-      content: message
-    });
+    this.setState(
+      {
+        uploadModalVisible: false,
+        uploading: false
+      },
+      () => {
+        ModalHelper.showErrorModal({
+          content: message
+        });
+      }
+    );
   };
 
   componentDidMount() {
@@ -178,7 +210,8 @@ const mapDispatchToProps = dispatch => {
   return {
     getListClass: (params, onSuccess, onFailed) =>
       dispatch(ClassActions.getListClass(params, onSuccess, onFailed)),
-    // uploadListClass: (data) => dispatch(ClassActions.)
+    uploadListClass: (data, onSuccess, onFailed) =>
+      dispatch(ClassActions.uploadListClass(data, onSuccess, onFailed))
   };
 };
 

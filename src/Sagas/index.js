@@ -4,6 +4,7 @@ import { takeLatest, all } from "redux-saga/effects";
 import { StartupTypes } from "../Redux/StartupActions";
 import { AuthTypes } from "../Redux/AuthActions";
 import { ClassTypes } from "../Redux/ClassActions";
+import { ClassStudentTypes } from "../Redux/ClassStudentActions";
 
 import { startup } from "./StartupSagas";
 import {
@@ -13,7 +14,12 @@ import {
   logoutToken,
   refreshToken
 } from "./AuthSagas";
-import {getClassDetail, getListClass} from "./ClassSagas";
+import {
+  getClassDetail,
+  getListClass,
+  uploadListClass
+} from "./ClassSagas";
+import {getStudentList, updateClassStudent} from "./ClassStudentSagas";
 
 export default function* root() {
   yield takeLatest(StartupTypes.STARTUP, startup);
@@ -24,5 +30,8 @@ export default function* root() {
   yield takeLatest(AuthTypes.LOGOUT_TOKEN, logoutToken);
   yield takeLatest(ClassTypes.GET_LIST_CLASS, getListClass);
   yield takeLatest(ClassTypes.GET_CLASS_DETAIL, getClassDetail);
+  yield takeLatest(ClassTypes.UPLOAD_LIST_CLASS, uploadListClass);
+  yield takeLatest(ClassStudentTypes.GET_STUDENT_LIST, getStudentList);
+  yield takeLatest(ClassStudentTypes.UPDATE_CLASS_STUDENT, updateClassStudent);
 
 }

@@ -30,6 +30,5 @@ export const uploadListClassSuccess = (state, action) => {
 export const reducer = createReducer(INITIAL_STATE, {
   [ClassTypes.GET_LIST_CLASS_SUCCESS]: getListClassSuccess,
   [ClassTypes.GET_CLASS_DETAIL_SUCCESS]: getClassDetailSuccess,
-  [ClassTypes.UPLOAD_LIST_CLASSS_SUCCESS]: uploadListClassSuccess
-
+  [ClassTypes.UPLOAD_LIST_CLASS_SUCCESS]: uploadListClassSuccess
 });

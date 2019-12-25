@@ -5,11 +5,13 @@ import rootSaga from "../Sagas/";
 import { reducer as AuthReducer } from "./AuthReducer";
 import { reducer as ClassReducer } from "./ClassReducer";
 import { reducer as ShiftReducer } from "./ShiftReducer";
+import { reducer as ClassStudentReducer } from "./ClassStudentReducer";
 
 /* ------------- Assemble The Reducers ------------- */
 export const reducers = combineReducers({
   auth: AuthReducer,
   class: ClassReducer,
+  classStudent: ClassStudentReducer,
   shift: ShiftReducer
 });
 

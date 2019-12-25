@@ -5,8 +5,8 @@ import ClassAPI from "./ClassAPI";
 import ShiftAPI from "./ShiftAPI";
 import ShiftRoomAPI from "./ShiftRoomAPI";
 import RoomAPI from "./RoomAPI";
-import UserAPI from "./UserAPI"
-
+import UserAPI from "./UserAPI";
+import ClassStudentAPI from "./ClassStudentAPI";
 
 import {
   API_ENDPOINT,
@@ -89,7 +89,8 @@ const API = {
   room: RoomAPI,
   user: UserAPI,
   shiftRoom: ShiftRoomAPI,
-  class: ClassAPI
+  class: ClassAPI,
+  classStudent: ClassStudentAPI
 };
 
 export default API;

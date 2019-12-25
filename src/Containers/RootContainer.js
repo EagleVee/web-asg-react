@@ -28,12 +28,11 @@ class RootContainer extends Component {
     return !this.state.isLoading ? (
       <Router history={history}>
         <Switch>
-          <Route
+          <PrivateRoute
             exact
             path="/"
-            render={props => {
-              return <Redirect to="/login" />;
-            }}
+            component={() => <Redirect to="/class" />}
+            isAuthenticated={isAuthenticated}
           />
           <Route exact path="/login" component={LoginPage} />
           <Container>
