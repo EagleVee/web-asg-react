@@ -170,7 +170,8 @@ class ClassPage extends Component {
     this.setState(
       {
         uploadModalVisible: false,
-        uploading: false
+        uploading: false,
+        file: {}
       },
       () => {
         ModalHelper.showSuccessModal({
@@ -184,7 +185,8 @@ class ClassPage extends Component {
     this.setState(
       {
         uploadModalVisible: false,
-        uploading: false
+        uploading: false,
+        file: {}
       },
       () => {
         ModalHelper.showErrorModal({

@@ -31,7 +31,7 @@ export function* uploadListClass(action) {
     yield put(ClassActions.uploadListClassSuccess(response));
     if (onSuccess) yield call(onSuccess, "Tải tệp lên máy chủ thành công");
   } else {
-    if (onFailed) yield call(onFailed, "Đã có lỗi xảy ra, vui lòng thử lại");
+    if (onFailed) yield call(onFailed, response.message);
   }
 }
 

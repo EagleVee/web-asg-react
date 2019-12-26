@@ -14,12 +14,12 @@ import {
   logoutToken,
   refreshToken
 } from "./AuthSagas";
+import { getClassDetail, getListClass, uploadListClass } from "./ClassSagas";
 import {
-  getClassDetail,
-  getListClass,
-  uploadListClass
-} from "./ClassSagas";
-import {getStudentList, updateClassStudent} from "./ClassStudentSagas";
+  getStudentList,
+  updateClassStudent,
+  uploadClassStudent
+} from "./ClassStudentSagas";
 
 export default function* root() {
   yield takeLatest(StartupTypes.STARTUP, startup);
@@ -33,5 +33,5 @@ export default function* root() {
   yield takeLatest(ClassTypes.UPLOAD_LIST_CLASS, uploadListClass);
   yield takeLatest(ClassStudentTypes.GET_STUDENT_LIST, getStudentList);
   yield takeLatest(ClassStudentTypes.UPDATE_CLASS_STUDENT, updateClassStudent);
-
+  yield takeLatest(ClassStudentTypes.UPLOAD_CLASS_STUDENT, uploadClassStudent);
 }

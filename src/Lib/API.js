@@ -11,6 +11,7 @@ import ClassStudentAPI from "./ClassStudentAPI";
 import {
   API_ENDPOINT,
   REQUEST_TIME_OUT,
+  REQUEST_TIME_OUT_FILE,
   STATUS_BAD_REQUEST,
   STATUS_INTERNAL_SERVER_ERROR,
   STATUS_OK,
@@ -19,7 +20,7 @@ import {
 
 export const instance = axios.create({
   baseURL: API_ENDPOINT,
-  timeout: REQUEST_TIME_OUT,
+  timeout: REQUEST_TIME_OUT_FILE,
   headers: {}
 });
 

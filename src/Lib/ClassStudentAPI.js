@@ -14,8 +14,8 @@ const API = {
     const path = "/class-student";
     return POST(path, data);
   },
-  upload: data => {
-    const path = "/class-student/upload";
+  upload: (id, data) => {
+    const path = "/class-student/upload/" + id;
     return POST(path, data);
   },
   update: (id, data) => {
