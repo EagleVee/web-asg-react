@@ -105,6 +105,9 @@ class Container extends Component {
           <Menu.Item key="shift">
             <Link to="/shift">Ca thi</Link>
           </Menu.Item>
+          <Menu.Item key="room">
+            <Link to="/room">Danh sách phòng thi</Link>
+          </Menu.Item>
         </Menu.SubMenu>
         <Menu.SubMenu
           key="2"
