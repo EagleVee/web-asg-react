@@ -22,6 +22,18 @@ export default class TimeHelper {
     return moment.unix(datetime).format(format);
   }
 
+  static getDayFromDate(datetime) {
+    return moment.unix(datetime).format("DD/MM/YYYY");
+  }
+
+  static getHourFromDate(datetime) {
+    return moment.unix(datetime).format("HH:mm");
+  }
+
+  static formatUnix(datetime) {
+    return moment(datetime).format("DD/MM/YYYY HH:mm");
+  }
+
   static diffFromNowInDay(datetime) {
     const given = moment.unix(datetime);
     const current = moment().startOf("day");

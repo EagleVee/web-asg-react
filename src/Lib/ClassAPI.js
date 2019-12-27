@@ -21,15 +21,6 @@ const API = {
   update: (id, data) => {
     const path = "/class/" + id;
     return PUT(path, data);
-  },
-  getStudentList: params => {
-    const path = "/class-student";
-    const queryString = qs.stringify(params);
-    return GET(path + "?" + queryString);
-  },
-  updateClassStudent: (id, data) => {
-    const path = "/class-student/" + id;
-    return PUT(path, data);
   }
 };
 

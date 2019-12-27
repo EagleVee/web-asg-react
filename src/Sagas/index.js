@@ -5,6 +5,7 @@ import { StartupTypes } from "../Redux/StartupActions";
 import { AuthTypes } from "../Redux/AuthActions";
 import { ClassTypes } from "../Redux/ClassActions";
 import { ClassStudentTypes } from "../Redux/ClassStudentActions";
+import { ShiftTypes } from "../Redux/ShiftActions";
 
 import { startup } from "./StartupSagas";
 import {
@@ -20,6 +21,7 @@ import {
   updateClassStudent,
   uploadClassStudent
 } from "./ClassStudentSagas";
+import { getListShift } from "./ShiftSagas";
 
 export default function* root() {
   yield takeLatest(StartupTypes.STARTUP, startup);
@@ -34,4 +36,5 @@ export default function* root() {
   yield takeLatest(ClassStudentTypes.GET_STUDENT_LIST, getStudentList);
   yield takeLatest(ClassStudentTypes.UPDATE_CLASS_STUDENT, updateClassStudent);
   yield takeLatest(ClassStudentTypes.UPLOAD_CLASS_STUDENT, uploadClassStudent);
+  yield takeLatest(ShiftTypes.GET_LIST_SHIFT, getListShift);
 }

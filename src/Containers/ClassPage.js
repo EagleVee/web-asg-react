@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import styles from "./Styles/ClassPage.module.css";
-import { Table, Divider, Icon, Spin } from "antd";
+import { Table, Button, Icon, Spin } from "antd";
 import { connect } from "react-redux";
 import FormData from "form-data";
 import ClassActions from "../Redux/ClassActions";

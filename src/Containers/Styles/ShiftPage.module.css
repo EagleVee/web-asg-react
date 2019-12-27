@@ -1,0 +1,21 @@
+.header {
+  padding: 10px 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.transparentButton {
+  background-color: transparent;
+  border: 0;
+  padding: 0px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/*.transparentButton:hover {*/
+/*  background-color: #28a745;*/
+/*  color: white !important;*/
+/*}*/

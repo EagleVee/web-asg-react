@@ -5,7 +5,6 @@ import styles from "./Styles/ClassDetailPage.module.css";
 import ClassActions from "../Redux/ClassActions";
 import ClassStudentActions from "../Redux/ClassStudentActions";
 import RoleHelper from "../Common/RoleHelper";
-import UnapprovedComponent from "../Components/UnapprovedComponent";
 import UploadModal from "../Components/UploadModal";
 import FormData from "form-data";
 import ModalHelper from "../Common/ModalHelper";
@@ -277,6 +276,7 @@ class ClassDetailPage extends Component {
   handleOnUpload = () => {
     this.setState(
       {
+        loading: true,
         uploading: true
       },
       () => {
@@ -315,6 +315,7 @@ class ClassDetailPage extends Component {
       {
         uploadModalVisible: false,
         uploading: false,
+        loading: false,
         file: {}
       },
       () => {

@@ -1,54 +1,163 @@
-import React, { Component } from 'react';
-import { Table } from 'antd';
+import React, { Component } from "react";
+import { Table, Icon, Button } from "antd";
+import TimeHelper from "../Common/TimeHelper";
+import { connect } from "react-redux";
+import ShiftActions from "../Redux/ShiftActions";
+import styles from "./Styles/ShiftPage.module.css";
+import CreateShiftModal from "../Components/CreateShiftModal";
+import moment from "moment";
 
 class ShiftPage extends Component {
-    state = {  }
-    render() { 
-        return ( <div>{this.renderTable()}</div> );
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: false,
+      uploading: false,
+      shiftModalVisible: false
+    };
+  }
+
+  render() {
+    return (
+      <div>
+        {this.renderHeader()}
+        {this.renderTable()}
+        {this.renderShiftModal()}
+      </div>
+    );
+  }
+
+  renderHeader() {
+    return (
+      <div className={styles.header}>
+        <Button className={`${styles.transparentButton}`}>
+          <Icon type="upload" style={{ fontSize: 20 }} />
+        </Button>
+        <Button
+          onClick={() => {
+            this.setState({
+              shiftModalVisible: true
+            });
+          }}
+          className={`text-success ${styles.transparentButton}`}
+        >
+          <Icon type="plus-circle" style={{ fontSize: 20 }} />
+        </Button>
+      </div>
+    );
+  }
+
+  renderTable() {
+    const columns = [
+      {
+        title: "Ngày thi",
+        dataIndex: "date",
+        key: "date"
+      },
+      {
+        title: "Bắt đầu",
+        dataIndex: "beginAt",
+        key: "begin"
+      },
+      {
+        title: "Kết thúc",
+        dataIndex: "endAt",
+        key: "end"
+      },
+      {
+        title: "Phòng thi",
+        dataIndex: "room",
+        key: "room"
+      },
+      {
+        title: "Môn thi",
+        dataIndex: "className",
+        key: "className"
+      }
+    ];
+
+    return <Table columns={columns} dataSource={this.populateShiftList()} />;
+  }
+
+  renderShiftModal = () => {
+    const { shiftModalVisible } = this.state;
+    return (
+      <CreateShiftModal
+        visible={shiftModalVisible}
+        onOk={this.handleOkShift}
+        onCancel={this.closeShiftModal}
+      />
+    );
+  };
+
+  handleOkShift = (date, start, end) => {
+    const dateString = date.format("YYYY-MM-DD");
+    const startString = start.format("HH:mm");
+    const endString = end.format("HH:mm");
+    const startUnix = moment(dateString + "T" + startString).unix();
+    const endUnix = moment(dateString + "T" + endString).unix();
+    console.log("START", startUnix);
+    console.log("END", endUnix);
+  };
+
+  closeShiftModal = () => {
+    this.setState({
+      shiftModalVisible: false
+    });
+  };
+
+  populateShiftList() {
+    let result = [];
+    const { listShift } = this.props.shift;
+    for (const shift of listShift) {
+      const { beginAt, endAt } = shift;
+      const _shift = {
+        date: TimeHelper.getDayFromDate(beginAt),
+        begin: TimeHelper.getHourFromDate(beginAt),
+        end: TimeHelper.getHourFromDate(endAt),
+        className: shift.class ? shift.class.name : ""
+      };
+      result.push(_shift);
     }
+    return result;
+  }
 
-    renderTable() {
-        
-        const columns = [
-          {
-            title: "Ca thi",
-            dataIndex: "shift",
-            key: "shift"
-          },
-          
-          {
-              title: "Ngay thi",
-              dataIndex: "date",
-              key: "date"
-            },
+  getListShift = () => {
+    const { getListShift } = this.props;
+    const params = {};
+    this.setState(
+      {
+        loading: true
+      },
+      () => {
+        getListShift(params, this.endLoading, this.endLoading);
+      }
+    );
+  };
 
-            {
-              title: "Phong thi",
-              dataIndex: "room",
-              key: "room"
-            },
-      
-            {
-              title: " Ma hoc phan",
-              dataIndex: "code",
-              key: "code"
-            }
-          ];
+  endLoading = () => {
+    this.setState({
+      loading: false
+    });
+  };
 
-        const rowSelection = {
-            onChange: (selectedRowKeys, selectedRows) => {
-              console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-            },
-            getCheckboxProps: record => ({
-              disabled: record.name === 'Disabled User', // Column configuration not to be checked
-              name: record.name,
-            }),
-          }; 
-          
-        return (
-            <Table rowSelection = {rowSelection} columns = {columns} dataSource = {[{shift: "7h-9h", date: "1/1/2019", room: "PM-101", code: "INT1234"}]} />
-        );
-    }
+  componentDidMount() {
+    this.getListShift();
+  }
 }
- 
-export default ShiftPage;
+
+const mapStateToProps = state => {
+  return {
+    auth: state.auth,
+    shift: state.shift
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    getListShift: (params, onSuccess, onFailed) =>
+      dispatch(ShiftActions.getListShift(params, onSuccess, onFailed))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ShiftPage);
