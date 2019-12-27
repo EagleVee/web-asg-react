@@ -6,6 +6,7 @@ import ShiftActions from "../Redux/ShiftActions";
 import styles from "./Styles/ShiftPage.module.css";
 import CreateShiftModal from "../Components/CreateShiftModal";
 import moment from "moment";
+import ModalHelper from "../Common/ModalHelper";
 
 class ShiftPage extends Component {
   constructor(props) {
@@ -13,7 +14,8 @@ class ShiftPage extends Component {
     this.state = {
       loading: false,
       uploading: false,
-      shiftModalVisible: false
+      shiftModalVisible: false,
+      creating: false
     };
   }
 
@@ -80,9 +82,10 @@ class ShiftPage extends Component {
   }
 
   renderShiftModal = () => {
-    const { shiftModalVisible } = this.state;
+    const { shiftModalVisible, creating } = this.state;
     return (
       <CreateShiftModal
+        spinning={creating}
         visible={shiftModalVisible}
         onOk={this.handleOkShift}
         onCancel={this.closeShiftModal}
@@ -90,14 +93,54 @@ class ShiftPage extends Component {
     );
   };
 
-  handleOkShift = (date, start, end) => {
+  handleOkShift = (date, start, end, className) => {
+    const { createShift } = this.props;
     const dateString = date.format("YYYY-MM-DD");
     const startString = start.format("HH:mm");
     const endString = end.format("HH:mm");
     const startUnix = moment(dateString + "T" + startString).unix();
     const endUnix = moment(dateString + "T" + endString).unix();
-    console.log("START", startUnix);
-    console.log("END", endUnix);
+    const shiftData = {
+      beginAt: startUnix,
+      endAt: endUnix,
+      class: className
+    };
+    this.setState(
+      {
+        creating: true
+      },
+      () => {
+        createShift(shiftData, this.createSuccess, this.createFailed);
+      }
+    );
+  };
+
+  createSuccess = () => {
+    this.setState(
+      {
+        creating: false,
+        shiftModalVisible: false
+      },
+      () => {
+        ModalHelper.showSuccessModal({
+          content: "Tạo ca thi thành công"
+        });
+      }
+    );
+  };
+
+  createFailed = message => {
+    this.setState(
+      {
+        creating: false,
+        shiftModalVisible: false
+      },
+      () => {
+        ModalHelper.showErrorModal({
+          content: message
+        });
+      }
+    );
   };
 
   closeShiftModal = () => {
@@ -156,7 +199,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     getListShift: (params, onSuccess, onFailed) =>
-      dispatch(ShiftActions.getListShift(params, onSuccess, onFailed))
+      dispatch(ShiftActions.getListShift(params, onSuccess, onFailed)),
+    createShift: (data, onSuccess, onFailed) =>
+      dispatch(ShiftActions.createShift(data, onSuccess, onFailed))
   };
 };
 

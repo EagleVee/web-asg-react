@@ -21,7 +21,7 @@ import {
   updateClassStudent,
   uploadClassStudent
 } from "./ClassStudentSagas";
-import { getListShift } from "./ShiftSagas";
+import { createShift, getListShift } from "./ShiftSagas";
 
 export default function* root() {
   yield takeLatest(StartupTypes.STARTUP, startup);
@@ -37,4 +37,5 @@ export default function* root() {
   yield takeLatest(ClassStudentTypes.UPDATE_CLASS_STUDENT, updateClassStudent);
   yield takeLatest(ClassStudentTypes.UPLOAD_CLASS_STUDENT, uploadClassStudent);
   yield takeLatest(ShiftTypes.GET_LIST_SHIFT, getListShift);
+  yield takeLatest(ShiftTypes.CREATE_SHIFT, createShift);
 }

@@ -10,8 +10,8 @@ export function* login(action) {
     const accessToken = response.data.accessToken;
     API.auth.setAccessToken(accessToken);
     yield call(CookieHelper.set, "accessToken", accessToken);
-    if (onSuccess) yield call(onSuccess);
     yield put(AuthActions.loginSuccess(response));
+    if (onSuccess) yield call(onSuccess);
   } else {
     if (onFailed) yield call(onFailed);
   }
