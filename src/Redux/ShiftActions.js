@@ -5,7 +5,8 @@ const { Types, Creators } = createActions({
   getListShiftSuccess: ["response"],
   updateShift: ["id", "data", "onSuccess", "onFailed"],
   updateShiftSuccess: ["response"],
-  createShift: ["data", "onSuccess", "onFailed"]
+  createShift: ["data", "onSuccess", "onFailed"],
+  uploadShift: ["data", "onSuccess", "onFailed"]
 });
 
 export const ShiftTypes = Types;
