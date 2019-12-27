@@ -6,6 +6,7 @@ import { AuthTypes } from "../Redux/AuthActions";
 import { ClassTypes } from "../Redux/ClassActions";
 import { ClassStudentTypes } from "../Redux/ClassStudentActions";
 import { ShiftTypes } from "../Redux/ShiftActions";
+import { RoomTypes } from "../Redux/RoomActions";
 
 import { startup } from "./StartupSagas";
 import {
@@ -22,6 +23,7 @@ import {
   uploadClassStudent
 } from "./ClassStudentSagas";
 import { createShift, getListShift } from "./ShiftSagas";
+import {createRoom, getListRoom, updateRoom, uploadRoom} from "./RoomSagas";
 
 export default function* root() {
   yield takeLatest(StartupTypes.STARTUP, startup);
@@ -38,4 +40,10 @@ export default function* root() {
   yield takeLatest(ClassStudentTypes.UPLOAD_CLASS_STUDENT, uploadClassStudent);
   yield takeLatest(ShiftTypes.GET_LIST_SHIFT, getListShift);
   yield takeLatest(ShiftTypes.CREATE_SHIFT, createShift);
+  yield takeLatest(RoomTypes.GET_LIST_ROOM, getListRoom);
+  yield takeLatest(RoomTypes.UPLOAD_ROOM, uploadRoom);
+  yield takeLatest(RoomTypes.UPDATE_ROOM, updateRoom);
+  yield takeLatest(RoomTypes.CREATE_ROOM, createRoom);
+
+
 }

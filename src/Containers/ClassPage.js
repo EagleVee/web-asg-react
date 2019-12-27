@@ -70,6 +70,7 @@ class ClassPage extends Component {
       <Table
         columns={columns}
         dataSource={listClass}
+        rowKey={record => record._id}
         onRow={(record, index) => {
           return {
             onClick: event => {

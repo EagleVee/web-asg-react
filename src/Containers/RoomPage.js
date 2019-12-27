@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import styles from "./Styles/ClassPage.module.css";
-import { Table, Button, Icon, Spin } from "antd";
+import styles from "./Styles/RoomPage.module.css";
+import { Table, Input, Icon, Spin, Modal } from "antd";
 import { connect } from "react-redux";
 import FormData from "form-data";
-import ClassActions from "../Redux/ClassActions";
+import RoomActions from "../Redux/RoomActions";
 import ModalHelper from "../Common/ModalHelper";
 import UploadModal from "../Components/UploadModal";
 
@@ -13,7 +13,15 @@ class RoomPage extends Component {
     this.state = {
       file: {},
       uploadModalVisible: false,
-      uploading: false
+      uploading: false,
+      roomModalVisible: false,
+      selectedRoom: {
+        _id: "",
+        name: "",
+        seat: 0
+      },
+      updating: false,
+      loading: false
     };
   }
   render() {
@@ -22,6 +30,7 @@ class RoomPage extends Component {
         {this.renderHeader()}
         {this.renderTable()}
         {this.renderUploadModal()}
+        {this.renderRoomModal()}
       </div>
     );
   }
@@ -29,7 +38,7 @@ class RoomPage extends Component {
   renderHeader() {
     return (
       <div className={styles.header}>
-        <p>Tải lên danh sách môn học (.xlsx)</p>
+        <p>Tải lên danh sách phòng thi (.xlsx)</p>
         <button
           className={`btn ${styles.button}`}
           onClick={event => {
@@ -48,37 +57,38 @@ class RoomPage extends Component {
   renderTable() {
     const columns = [
       {
-        title: "Mã môn học",
-        dataIndex: "code",
-        key: "code"
-      },
-      {
-        title: "Tên môn học",
+        title: "Tên phòng",
         dataIndex: "name",
         key: "name"
       },
       {
-        title: "Giảng viên",
-        dataIndex: "lecturer",
-        key: "lecturer"
+        title: "Số máy tính",
+        dataIndex: "seat",
+        key: "seat"
       }
     ];
 
-    const { listClass } = this.props.class;
+    const { listRoom } = this.props.room;
 
     return (
-      <Table
-        columns={columns}
-        dataSource={listClass}
-        onRow={(record, index) => {
-          return {
-            onClick: event => {
-              event.preventDefault();
-              this.props.history.push("/class/" + record._id);
-            }
-          };
-        }}
-      />
+      <Spin spinning={this.state.loading}>
+        <Table
+          columns={columns}
+          dataSource={listRoom}
+          rowKey={record => record._id}
+          onRow={(record, index) => {
+            return {
+              onClick: event => {
+                event.preventDefault();
+                this.setState({
+                  selectedRoom: record,
+                  roomModalVisible: true
+                });
+              }
+            };
+          }}
+        />
+      </Spin>
     );
   }
 
@@ -142,10 +152,103 @@ class RoomPage extends Component {
     );
   };
 
+  renderRoomModal = () => {
+    const { updating, roomModalVisible, selectedRoom } = this.state;
+    return (
+      <Modal
+        visible={roomModalVisible}
+        onCancel={this.closeRoomModal}
+        onOk={this.handleUpdateRoom}
+      >
+        <Spin spinning={updating}>
+          <div className="row pt-3">
+            <div className="w-50 p-1">
+              <p>Tên phòng</p>
+              <Input
+                value={selectedRoom.name}
+                onChange={e => {
+                  this.setState({
+                    selectedRoom: {
+                      ...selectedRoom,
+                      name: e.target.value
+                    }
+                  });
+                }}
+              />
+            </div>
+            <div className="w-50 p-1">
+              <p>Số máy tính</p>
+              <Input
+                type="number"
+                value={selectedRoom.seat}
+                onChange={e => {
+                  this.setState({
+                    selectedRoom: {
+                      ...selectedRoom,
+                      seat: e.target.value
+                    }
+                  });
+                }}
+              />
+            </div>
+          </div>
+        </Spin>
+      </Modal>
+    );
+  };
+
+  closeRoomModal = () => {
+    this.setState({
+      roomModalVisible: false
+    });
+  };
+
+  handleUpdateRoom = () => {
+    const onSuccess = message => {
+      this.setState(
+        {
+          roomModalVisible: false,
+          updating: false
+        },
+        () => {
+          ModalHelper.showSuccessModal({
+            content: message
+          });
+          this.getListRoom();
+        }
+      );
+    };
+
+    const onFailed = message => {
+      this.setState(
+        {
+          roomModalVisible: false,
+          updating: false
+        },
+        () => {
+          ModalHelper.showErrorModal({
+            content: message
+          });
+        }
+      );
+    };
+    const { selectedRoom } = this.state;
+    const { updateRoom } = this.props;
+    this.setState(
+      {
+        updating: true
+      },
+      () => {
+        updateRoom(selectedRoom._id, selectedRoom, onSuccess, onFailed);
+      }
+    );
+  };
+
   handleOnUpload = () => {
     this.setState(
       {
-        uploading: true
+        uploading: true,
+        loading: true
       },
       () => {
         this.uploadFile();
@@ -154,16 +257,29 @@ class RoomPage extends Component {
   };
 
   uploadFile = () => {
-    const { uploadListClass } = this.props;
+    const { uploadRoom } = this.props;
     const { file } = this.state;
     const formData = new FormData();
     formData.append("file", file);
-    uploadListClass(formData, this.onSuccess, this.onFailed);
+    uploadRoom(formData, this.onSuccess, this.onFailed);
   };
 
-  getListClass = () => {
-    const { getListClass } = this.props;
-    getListClass();
+  getListRoom = () => {
+    const { getListRoom } = this.props;
+    this.setState(
+      {
+        loading: true
+      },
+      () => {
+        getListRoom({}, this.loadingDone, this.loadingDone);
+      }
+    );
+  };
+
+  loadingDone = () => {
+    this.setState({
+      loading: false
+    });
   };
 
   onSuccess = message => {
@@ -177,6 +293,7 @@ class RoomPage extends Component {
         ModalHelper.showSuccessModal({
           content: message
         });
+        this.getListRoom();
       }
     );
   };
@@ -197,23 +314,25 @@ class RoomPage extends Component {
   };
 
   componentDidMount() {
-    this.getListClass();
+    this.getListRoom();
   }
 }
 
 const mapStateToProps = state => {
   return {
     auth: state.auth,
-    class: state.class
+    room: state.room
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    getListClass: (params, onSuccess, onFailed) =>
-      dispatch(ClassActions.getListClass(params, onSuccess, onFailed)),
-    uploadListClass: (data, onSuccess, onFailed) =>
-      dispatch(ClassActions.uploadListClass(data, onSuccess, onFailed))
+    getListRoom: (params, onSuccess, onFailed) =>
+      dispatch(RoomActions.getListRoom(params, onSuccess, onFailed)),
+    uploadRoom: (data, onSuccess, onFailed) =>
+      dispatch(RoomActions.uploadRoom(data, onSuccess, onFailed)),
+    updateRoom: (id, data, onSuccess, onFailed) =>
+      dispatch(RoomActions.updateRoom(id, data, onSuccess, onFailed))
   };
 };
 

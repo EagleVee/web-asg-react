@@ -139,7 +139,11 @@ class ClassDetailPage extends Component {
 
     return (
       <Spin spinning={this.state.loading}>
-        <Table columns={columns} dataSource={this.populateStudentList()} />
+        <Table
+          columns={columns}
+          dataSource={this.populateStudentList()}
+          rowKey={record => record.id}
+        />
       </Spin>
     );
   }
