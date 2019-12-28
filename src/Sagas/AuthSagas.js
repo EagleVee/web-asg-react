@@ -32,12 +32,12 @@ export function* refreshToken(action) {
 }
 export function* logoutToken(action) {
   const { onSuccess, onFailed } = action;
-  const response = yield call(API.logoutToken);
+  const response = yield call(API.auth.logout);
   if (response.status) {
     yield put(AuthActions.logoutTokenSuccess(response));
-    yield call(onSuccess);
+    if (onSuccess) yield call(onSuccess);
   } else {
-    // yield call(onFailed, 'Có lỗi xảy ra khi đăng xuất')
+    if (onFailed) yield call(onFailed);
   }
 }
 

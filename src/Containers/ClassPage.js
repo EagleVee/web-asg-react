@@ -6,6 +6,7 @@ import FormData from "form-data";
 import ClassActions from "../Redux/ClassActions";
 import ModalHelper from "../Common/ModalHelper";
 import UploadModal from "../Components/UploadModal";
+import RoleHelper from "../Common/RoleHelper";
 
 class ClassPage extends Component {
   constructor(props) {
@@ -13,7 +14,8 @@ class ClassPage extends Component {
     this.state = {
       file: {},
       uploadModalVisible: false,
-      uploading: false
+      uploading: false,
+      loading: false
     };
   }
   render() {
@@ -67,19 +69,21 @@ class ClassPage extends Component {
     const { listClass } = this.props.class;
 
     return (
-      <Table
-        columns={columns}
-        dataSource={listClass}
-        rowKey={record => record._id}
-        onRow={(record, index) => {
-          return {
-            onClick: event => {
-              event.preventDefault();
-              this.props.history.push("/class/" + record._id);
-            }
-          };
-        }}
-      />
+      <Spin spinning={this.state.loading}>
+        <Table
+          columns={columns}
+          dataSource={listClass}
+          rowKey={record => record._id}
+          onRow={(record, index) => {
+            return {
+              onClick: event => {
+                event.preventDefault();
+                this.props.history.push("/class/" + record._id);
+              }
+            };
+          }}
+        />
+      </Spin>
     );
   }
 
@@ -163,8 +167,23 @@ class ClassPage extends Component {
   };
 
   getListClass = () => {
-    const { getListClass } = this.props;
-    getListClass();
+    const { getListClass, auth } = this.props;
+    const isStudent = RoleHelper.isStudent(auth.user);
+    const params = isStudent ? { student: auth.user._id } : {};
+    this.setState(
+      {
+        loading: true
+      },
+      () => {
+        getListClass(params, this.loadingDone, this.loadingDone);
+      }
+    );
+  };
+
+  loadingDone = () => {
+    this.setState({
+      loading: false
+    });
   };
 
   onSuccess = message => {

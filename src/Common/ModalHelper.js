@@ -12,12 +12,24 @@ export default class ModalHelper {
   static showSuccessModal({
     content = "",
     title = "Thành công",
-    onOK = () => {}
+    onOk = () => {}
   }) {
     Modal.success({
       title: title,
       content: content,
-      onOk: onOK
+      onOk: onOk
     });
+  }
+
+  static showConfirmModal({
+    content = "",
+    title = "Xác nhận",
+    onOk = () => {}
+  }) {
+    Modal.confirm({
+      title: title,
+      content: content,
+      onOk: onOk
+    })
   }
 }

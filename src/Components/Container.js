@@ -4,6 +4,9 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import styles from "./Styles/Container.module.css";
 import { connect } from "react-redux";
+import AuthActions from "../Redux/AuthActions";
+import ModalHelper from "../Common/ModalHelper";
+import history from "../Navigation/History";
 
 const { Sider, Content } = Layout;
 
@@ -60,9 +63,6 @@ class Container extends Component {
       >
         <Menu.SubMenu
           key="1"
-          onTitleClick={() => {
-            this.props.menuOnClick("1");
-          }}
           title={
             <span className={styles.viewCenter}>
               <Icon type="calendar" style={{ fontSize: 16 }} />
@@ -70,8 +70,34 @@ class Container extends Component {
             </span>
           }
         >
-          <Menu.Item key="message">
-            <Link to="/message">Danh sách đăng ký</Link>
+          <Menu.Item key="class">
+            <Link to="/class">Danh sách đăng ký</Link>
+          </Menu.Item>
+          <Menu.Item key="shift">
+            <Link to="/shift">Ca thi</Link>
+          </Menu.Item>
+        </Menu.SubMenu>
+        <Menu.SubMenu
+          key="3"
+          title={
+            <span className={styles.viewCenter}>
+              <Icon type="setting" style={{ fontSize: 16 }} />
+              <span>Thiết lập</span>
+            </span>
+          }
+        >
+          <Menu.Item
+            key="manage"
+            onClick={() => {
+              ModalHelper.showConfirmModal({
+                content: "Bạn có chắc muốn đăng xuất khỏi hệ thống?",
+                onOk: () => {
+                  this.props.logout();
+                }
+              });
+            }}
+          >
+            <Link to="/account/manage">Đăng xuất</Link>
           </Menu.Item>
         </Menu.SubMenu>
       </Menu>
@@ -89,9 +115,6 @@ class Container extends Component {
       >
         <Menu.SubMenu
           key="1"
-          onTitleClick={() => {
-            this.props.menuOnClick("1");
-          }}
           title={
             <span className={styles.viewCenter}>
               <Icon type="calendar" style={{ fontSize: 16 }} />
@@ -125,15 +148,60 @@ class Container extends Component {
             <Link to="/account/manage">Quản lý tài khoản</Link>
           </Menu.Item>
         </Menu.SubMenu>
+        <Menu.SubMenu
+          key="3"
+          title={
+            <span className={styles.viewCenter}>
+              <Icon type="setting" style={{ fontSize: 16 }} />
+              <span>Thiết lập</span>
+            </span>
+          }
+        >
+          <Menu.Item
+            key="manage"
+            onClick={() => {
+              ModalHelper.showConfirmModal({
+                content: "Bạn có chắc muốn đăng xuất khỏi hệ thống?",
+                onOk: () => {
+                  this.logout();
+                }
+              });
+            }}
+          >
+            Đăng xuất
+          </Menu.Item>
+        </Menu.SubMenu>
       </Menu>
     );
   }
+
+  logout = () => {
+    this.props.logout(this.logoutSuccess, this.logoutFailed);
+  };
+
+  logoutSuccess = () => {
+    ModalHelper.showSuccessModal({
+      content: "Đăng xuất thành công",
+      onOk: () => {
+        history.push("/login");
+      }
+    });
+  };
+
+  logoutFailed = () => {
+    ModalHelper.showErrorModal({
+      content: "Có lỗi xảy ra khi đăng xuất, vui lòng thử lại"
+    });
+  };
 }
 
 const mapStateToProps = state => ({
   auth: state.auth
 });
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  logout: (onSuccess, onFailed) =>
+    dispatch(AuthActions.logoutToken(onSuccess, onFailed))
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Container);
