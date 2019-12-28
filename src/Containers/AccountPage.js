@@ -15,7 +15,8 @@ class AccountPage extends Component {
     this.state = {
         file: {},
         uploadModalVisible: false,
-        uploading: false
+        uploading: false,
+        search: ''
     };
   }
   render() {
@@ -74,8 +75,9 @@ class AccountPage extends Component {
     //const { listAccount } = this.props.account;
     const listAccount = [
         {
-            studentId: "17021344",
-            name: "abc"
+          key: 1,
+          studentId: "17021344",
+          name: "abc"
         }
     ]
 
@@ -83,7 +85,7 @@ class AccountPage extends Component {
       <Table
         columns={columns}
         dataSource={listAccount}
-        rowKey={record => record._id}
+        //rowKey={record => record._id}
       />
     );
   }
