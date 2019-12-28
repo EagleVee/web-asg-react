@@ -9,6 +9,7 @@ import moment from "moment";
 import ModalHelper from "../Common/ModalHelper";
 import UploadModal from "../Components/UploadModal";
 import FormData from "form-data";
+import RoleHelper from "../Common/RoleHelper";
 
 class ShiftPage extends Component {
   constructor(props) {
@@ -25,12 +26,11 @@ class ShiftPage extends Component {
   }
 
   render() {
+    const isAdmin = RoleHelper.isAdmin(this.props.auth.user);
     return (
       <div>
-        {this.renderHeader()}
+        {isAdmin ? this.renderHeader() : <div />}
         {this.renderTable()}
-        {this.renderShiftModal()}
-        {this.renderUploadModal()}
       </div>
     );
   }
@@ -39,7 +39,7 @@ class ShiftPage extends Component {
     return (
       <div className={styles.header}>
         <Button
-          className={`${styles.transparentButton}`}
+          className={styles.transparentButton}
           onClick={() => {
             this.setState({
               uploadModalVisible: true
@@ -58,11 +58,14 @@ class ShiftPage extends Component {
         >
           <Icon type="plus-circle" style={{ fontSize: 20 }} />
         </Button>
+        {this.renderShiftModal()}
+        {this.renderUploadModal()}
       </div>
     );
   }
 
   renderTable() {
+    const isAdmin = RoleHelper.isAdmin(this.props.auth.user);
     const columns = [
       {
         title: "Ngày thi",
@@ -115,16 +118,18 @@ class ShiftPage extends Component {
           onRow={record => {
             return {
               onClick: e => {
-                this.setState(
-                  {
-                    selectedShift: record
-                  },
-                  () => {
-                    this.setState({
-                      shiftModalVisible: true
-                    });
-                  }
-                );
+                if (isAdmin) {
+                  this.setState(
+                    {
+                      selectedShift: record
+                    },
+                    () => {
+                      this.setState({
+                        shiftModalVisible: true
+                      });
+                    }
+                  );
+                }
               }
             };
           }}
