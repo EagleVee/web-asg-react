@@ -22,6 +22,10 @@ const API = {
   update: (id, data) => {
     const path = "/shift-room/" + id;
     return PUT(path, data);
+  },
+  studentRegister: data => {
+    const path = "/shift-room/register";
+    return POST(path, data);
   }
 };
 

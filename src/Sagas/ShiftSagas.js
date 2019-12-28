@@ -58,3 +58,13 @@ export function* uploadShift(action) {
     if (onFailed) yield call(onFailed, response.message);
   }
 }
+
+export function* studentRegister(action) {
+  const { data, onSuccess, onFailed } = action;
+  const response = yield call(API.shiftRoom.studentRegister, data);
+  if (response.status) {
+    if (onSuccess) yield call(onSuccess, "Tải tệp lên máy chủ thành công");
+  } else {
+    if (onFailed) yield call(onFailed, response.message);
+  }
+}

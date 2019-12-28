@@ -200,8 +200,8 @@ class ClassDetailPage extends Component {
       },
       {
         title: "Phòng thi",
-        dataIndex: "room",
-        key: "room"
+        dataIndex: "roomName",
+        key: "roomName"
       },
       {
         title: "Số lượng",
@@ -219,10 +219,11 @@ class ClassDetailPage extends Component {
             registered === false ? "btn btn-success" : "btn btn-danger";
           const buttonDisabled =
             examStatus === null || examStatus === false || available === false;
-          const handleButtonOnClick = () => {};
           return (
             <button
-              onClick={handleButtonOnClick}
+              onClick={() => {
+                this.handleOnRegister(record);
+              }}
               className={className}
               disabled={buttonDisabled}
             >
@@ -252,16 +253,15 @@ class ClassDetailPage extends Component {
     }
 
     for (const shiftRoom of shiftRooms) {
-      const { room, shift, registered, available, students } = shiftRoom;
+      const { room, shift, students } = shiftRoom;
       const { beginAt, endAt } = shift;
       const { name, seat } = room;
       const data = {
+        ...shiftRoom,
         date: TimeHelper.getDayFromDate(beginAt),
         begin: TimeHelper.getHourFromDate(beginAt),
         end: TimeHelper.getHourFromDate(endAt),
-        registered: registered,
-        available: available,
-        room: name,
+        roomName: name,
         number: students.length + "/" + seat
       };
 
@@ -483,6 +483,45 @@ class ClassDetailPage extends Component {
     });
   };
 
+  handleOnRegister = record => {
+    const { studentRegister, auth } = this.props;
+    const { room, shift, registered } = record;
+    const data = {
+      student: auth.user._id,
+      newRoom: room._id,
+      shift: shift._id,
+      register: !registered
+    };
+    this.setState(
+      {
+        shiftLoading: true
+      },
+      () => {
+        studentRegister(data, this.registerSuccess, this.registerFailed);
+      }
+    );
+  };
+
+  registerSuccess = () => {
+    ModalHelper.showSuccessModal({
+      content: "Bạn đã cập nhật ca thi thành công"
+    });
+    this.getShiftRooms();
+  };
+
+  registerFailed = () => {
+    this.setState(
+      {
+        shiftLoading: false
+      },
+      () => {
+        ModalHelper.showErrorModal({
+          content: "Đã có lỗi xảy ra, vui lòng thử lại"
+        });
+      }
+    );
+  };
+
   componentDidMount() {
     this.getClassDetail();
     this.getShiftRooms();
@@ -514,7 +553,9 @@ const mapDispatchToProps = dispatch => {
         ClassStudentActions.uploadClassStudent(id, data, onSuccess, onFailed)
       ),
     getShiftRooms: (params, onSuccess, onFailed) =>
-      dispatch(ShiftActions.getShiftRooms(params, onSuccess, onFailed))
+      dispatch(ShiftActions.getShiftRooms(params, onSuccess, onFailed)),
+    studentRegister: (data, onSuccess, onFailed) =>
+      dispatch(ShiftActions.studentRegister(data, onSuccess, onFailed))
   };
 };
 
