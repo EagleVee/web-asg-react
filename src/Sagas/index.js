@@ -7,6 +7,7 @@ import { ClassTypes } from "../Redux/ClassActions";
 import { ClassStudentTypes } from "../Redux/ClassStudentActions";
 import { ShiftTypes } from "../Redux/ShiftActions";
 import { RoomTypes } from "../Redux/RoomActions";
+import { AccountTypes } from "../Redux/AccountActions";
 
 import { startup } from "./StartupSagas";
 import {
@@ -25,11 +26,13 @@ import {
 import {
   createShift,
   getListShift,
-  getShiftRooms, studentRegister,
+  getShiftRooms,
+  studentRegister,
   updateShift,
   uploadShift
 } from "./ShiftSagas";
 import { createRoom, getListRoom, updateRoom, uploadRoom } from "./RoomSagas";
+import { getListAccount, uploadListAccount } from "./AccountSagas";
 
 export default function* root() {
   yield takeLatest(StartupTypes.STARTUP, startup);
@@ -54,4 +57,7 @@ export default function* root() {
   yield takeLatest(RoomTypes.UPLOAD_ROOM, uploadRoom);
   yield takeLatest(RoomTypes.UPDATE_ROOM, updateRoom);
   yield takeLatest(RoomTypes.CREATE_ROOM, createRoom);
+  yield takeLatest(RoomTypes.CREATE_ROOM, createRoom);
+  yield takeLatest(AccountTypes.GET_LIST_ACCOUNT, getListAccount);
+  yield takeLatest(AccountTypes.UPLOAD_LIST_ACCOUNT, uploadListAccount);
 }

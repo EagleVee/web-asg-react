@@ -12,8 +12,10 @@ export function* startup(action) {
     const response = yield call(API.auth.validateToken);
     if (response.status) {
       const { is_alive } = response.data;
-      if (is_alive) {
+      if (is_alive === true) {
         yield put(AuthActions.me(callback));
+      } else {
+        yield call(callback);
       }
     } else {
       yield call(callback);

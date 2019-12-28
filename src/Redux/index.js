@@ -6,7 +6,8 @@ import { reducer as AuthReducer } from "./AuthReducer";
 import { reducer as ClassReducer } from "./ClassReducer";
 import { reducer as ShiftReducer } from "./ShiftReducer";
 import { reducer as ClassStudentReducer } from "./ClassStudentReducer";
-import { reducer as RoomReducer } from "./RoomReducer"
+import { reducer as RoomReducer } from "./RoomReducer";
+import { reducer as AccountReducer } from "./AccountReducer";
 
 /* ------------- Assemble The Reducers ------------- */
 export const reducers = combineReducers({
@@ -14,7 +15,8 @@ export const reducers = combineReducers({
   class: ClassReducer,
   classStudent: ClassStudentReducer,
   shift: ShiftReducer,
-  room: RoomReducer
+  room: RoomReducer,
+  account: AccountReducer
 });
 
 export default () => {

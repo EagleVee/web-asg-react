@@ -65,21 +65,14 @@ class LoginPage extends Component {
   renderFormFooter() {
     return (
       <div className="footer row">
-        <div className="col-5 text-left">
-          <Link
-            className={`btn btn-outline-primary btn-white ${styles.footerBtn}`}
-            to="/register"
-          >
-            Register
-          </Link>
-        </div>
+        <div className="col-5" />
         <div className="col-5 text-right">
           <button
             type="submit"
             className={`btn btn-primary ${styles.footerBtn}`}
             onClick={this.loginOnSubmit}
           >
-            Login
+            Đăng nhập
           </button>
         </div>
       </div>

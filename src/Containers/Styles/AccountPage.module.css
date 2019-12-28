@@ -10,7 +10,7 @@
 .header {
     display: flex;
     flex-direction: row;
-    padding: 0 10px;
+    padding: 10px 10px;
 }
 
 .headerLeft {

@@ -37,7 +37,17 @@ class RootContainer extends Component {
             component={() => <Redirect to="/class" />}
             isAuthenticated={isAuthenticated}
           />
-          <Route exact path="/login" component={LoginPage} />
+          <Route
+            exact
+            path="/login"
+            render={props => {
+              return isAuthenticated ? (
+                <Redirect to="/class" />
+              ) : (
+                <LoginPage {...props} />
+              );
+            }}
+          />
           <Container>
             <PrivateRoute
               exact

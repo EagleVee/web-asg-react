@@ -40,7 +40,7 @@ class ClassDetailPage extends Component {
       return <div />;
     }
     const { code, name, lecturer, examStatus } = classDetail;
-    const isStudent = this.props.auth.user;
+    const isStudent = RoleHelper.isStudent(this.props.auth.user);
     const renderExamStatus = () => {
       if (!isStudent) return <div />;
       if (examStatus === false) {
