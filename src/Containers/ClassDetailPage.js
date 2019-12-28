@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Table, Spin, Icon, Dropdown, Button, Menu } from "antd";
+import { Table, Spin, Icon, Dropdown, Button, Menu, Divider } from "antd";
 import styles from "./Styles/ClassDetailPage.module.css";
 import ClassActions from "../Redux/ClassActions";
 import ClassStudentActions from "../Redux/ClassStudentActions";
@@ -26,6 +26,7 @@ class ClassDetailPage extends Component {
     return (
       <div>
         {this.renderHeader()}
+        {this.renderRoomList()}
         {this.renderStudentList()}
       </div>
     );
@@ -147,6 +148,88 @@ class ClassDetailPage extends Component {
       </Spin>
     );
   }
+  
+  renderRoomList() {
+    const columns = [
+      {
+        title: "Ngày thi",
+        dataIndex: "date",
+        key: "date"
+      },
+      {
+        title: "Bắt đầu",
+        dataIndex: "begin",
+        key: "begin"
+      },
+      {
+        title: "Kết thúc",
+        dataIndex: "end",
+        key: "end"
+      },
+      {
+        title: "Phòng thi",
+        dataIndex: "room",
+        key: "room"
+      },
+      {
+        title: "Số lượng",
+        dataIndex: "number",
+        key: "number",
+        render: (text) => <a>{text}/{text}</a>
+      },
+      {
+        title: "Đăng ký",
+        dataIndex: "register",
+        key: "register",
+        render: (text, record) => {
+          let displayText = text === true ? "Đăng ký" : "Hủy đăng ký";
+
+          const renderButton = () => {
+            return (
+              <button onClick={handleButtonOnClick} className="btn btn-primary">
+                <p>{displayText}</p>
+              </button>
+            );
+          };
+
+          const handleButtonOnClick = () => {
+            
+          };
+          return renderButton();
+        }
+      }   
+    ]
+    
+    const data = [
+      {
+        key: 1,
+        date: "1/1/2019",
+        begin:  "13h00",
+        end:  "14h00",
+        room: "1",
+        number: "50"
+      },
+      {
+        key: 2,
+        date: "2/1/2019",
+        begin:  "13h00",
+        end:  "14h00",
+        room: "2",
+        number: "50"
+      }
+    ]
+
+    return (
+      <Spin spinning={this.state.loading}>
+        <Table
+          columns={columns}
+          dataSource={data}
+          rowKey={record => record.id}
+        />
+      </Spin>
+    );
+  }
+  
 
   renderUploadModal = () => {
     const { uploadModalVisible, file, uploading } = this.state;
