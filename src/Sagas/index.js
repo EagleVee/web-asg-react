@@ -25,6 +25,7 @@ import {
 import {
   createShift,
   getListShift,
+  getShiftRooms,
   updateShift,
   uploadShift
 } from "./ShiftSagas";
@@ -47,6 +48,7 @@ export default function* root() {
   yield takeLatest(ShiftTypes.CREATE_SHIFT, createShift);
   yield takeLatest(ShiftTypes.UPDATE_SHIFT, updateShift);
   yield takeLatest(ShiftTypes.UPLOAD_SHIFT, uploadShift);
+  yield takeLatest(ShiftTypes.GET_SHIFT_ROOMS, getShiftRooms);
   yield takeLatest(RoomTypes.GET_LIST_ROOM, getListRoom);
   yield takeLatest(RoomTypes.UPLOAD_ROOM, uploadRoom);
   yield takeLatest(RoomTypes.UPDATE_ROOM, updateRoom);

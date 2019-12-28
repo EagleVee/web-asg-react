@@ -4,10 +4,12 @@ import { Table, Spin, Icon, Dropdown, Button, Menu, Divider } from "antd";
 import styles from "./Styles/ClassDetailPage.module.css";
 import ClassActions from "../Redux/ClassActions";
 import ClassStudentActions from "../Redux/ClassStudentActions";
+import ShiftActions from "../Redux/ShiftActions";
 import RoleHelper from "../Common/RoleHelper";
 import UploadModal from "../Components/UploadModal";
 import FormData from "form-data";
 import ModalHelper from "../Common/ModalHelper";
+import TimeHelper from "../Common/TimeHelper";
 
 class ClassDetailPage extends Component {
   constructor(props) {
@@ -18,7 +20,7 @@ class ClassDetailPage extends Component {
       uploading: false,
       uploadModalVisible: false,
       file: {},
-      examStatus: true
+      shiftLoading: false
     };
   }
 
@@ -37,13 +39,33 @@ class ClassDetailPage extends Component {
     if (!classDetail) {
       return <div />;
     }
-    const { code, name, lecturer } = classDetail;
+    const { code, name, lecturer, examStatus } = classDetail;
+    const isStudent = this.props.auth.user;
+    const renderExamStatus = () => {
+      if (!isStudent) return <div />;
+      if (examStatus === false) {
+        return (
+          <p className={`text-danger ${styles.smallText}`}>Không được dự thi</p>
+        );
+      } else if (examStatus === true) {
+        return (
+          <p className={`text-success ${styles.smallText}`}>Được dự thi</p>
+        );
+      }
+
+      return (
+        <p className={`text-danger ${styles.smallText}`}>
+          Bạn không thuộc lớp học này
+        </p>
+      );
+    };
     return (
       <div className={styles.infoContainer}>
         <div>
           <p className={styles.largeText}>Tên môn học: {name}</p>
           <p className={styles.mediumText}>Mã môn học: {code}</p>
           <p className={styles.smallText}>Giảng viên: {lecturer}</p>
+          {renderExamStatus()}
         </div>
         {this.renderUploadClass()}
       </div>
@@ -148,8 +170,18 @@ class ClassDetailPage extends Component {
       </Spin>
     );
   }
-  
+
   renderRoomList() {
+    const isStudent = RoleHelper.isStudent(this.props.auth.user);
+    if (!isStudent) {
+      return <div />;
+    }
+    const classDetail = this.props.class[this.state.id];
+    if (!classDetail) {
+      return <div />;
+    }
+    const { examStatus } = classDetail;
+
     const columns = [
       {
         title: "Ngày thi",
@@ -174,62 +206,69 @@ class ClassDetailPage extends Component {
       {
         title: "Số lượng",
         dataIndex: "number",
-        key: "number",
-        render: (text) => <a>{text}/{text}</a>
+        key: "number"
       },
       {
         title: "Đăng ký",
         dataIndex: "register",
         key: "register",
         render: (text, record) => {
-          let displayText = text === true ? "Đăng ký" : "Hủy đăng ký";
-
-          const renderButton = () => {
-            return (
-              <button onClick={handleButtonOnClick} className="btn btn-primary">
-                <p>{displayText}</p>
-              </button>
-            );
-          };
-
-          const handleButtonOnClick = () => {
-            
-          };
-          return renderButton();
+          const { registered, available } = record;
+          let displayText = registered === false ? "Đăng ký" : "Hủy đăng ký";
+          let className =
+            registered === false ? "btn btn-success" : "btn btn-danger";
+          const buttonDisabled =
+            examStatus === null || examStatus === false || available === false;
+          const handleButtonOnClick = () => {};
+          return (
+            <button
+              onClick={handleButtonOnClick}
+              className={className}
+              disabled={buttonDisabled}
+            >
+              <p>{displayText}</p>
+            </button>
+          );
         }
-      }   
-    ]
-    
-    const data = [
-      {
-        key: 1,
-        date: "1/1/2019",
-        begin:  "13h00",
-        end:  "14h00",
-        room: "1",
-        number: "50"
-      },
-      {
-        key: 2,
-        date: "2/1/2019",
-        begin:  "13h00",
-        end:  "14h00",
-        room: "2",
-        number: "50"
       }
-    ]
+    ];
 
     return (
-      <Spin spinning={this.state.loading}>
+      <Spin spinning={this.state.shiftLoading}>
         <Table
           columns={columns}
-          dataSource={data}
+          dataSource={this.populateShiftRooms()}
           rowKey={record => record.id}
         />
       </Spin>
     );
   }
-  
+
+  populateShiftRooms = () => {
+    let result = [];
+    const shiftRooms = this.props.shift[this.state.id];
+    if (!shiftRooms) {
+      return result;
+    }
+
+    for (const shiftRoom of shiftRooms) {
+      const { room, shift, registered, available, students } = shiftRoom;
+      const { beginAt, endAt } = shift;
+      const { name, seat } = room;
+      const data = {
+        date: TimeHelper.getDayFromDate(beginAt),
+        begin: TimeHelper.getHourFromDate(beginAt),
+        end: TimeHelper.getHourFromDate(endAt),
+        registered: registered,
+        available: available,
+        room: name,
+        number: students.length + "/" + seat
+      };
+
+      result.push(data);
+    }
+    return result;
+  };
 
   renderUploadModal = () => {
     const { uploadModalVisible, file, uploading } = this.state;
@@ -333,9 +372,17 @@ class ClassDetailPage extends Component {
   };
 
   getClassDetail = () => {
-    const { getClassDetail } = this.props;
+    const { getClassDetail, auth } = this.props;
     const { id } = this.state;
-    getClassDetail(id);
+    const isStudent = RoleHelper.isStudent(auth.user);
+    let params = {};
+    if (isStudent) {
+      params = {
+        student: auth.user._id
+      };
+    }
+
+    getClassDetail(id, params);
   };
 
   getStudentList = () => {
@@ -413,8 +460,32 @@ class ClassDetailPage extends Component {
     );
   };
 
+  getShiftRooms = () => {
+    const { getShiftRooms, auth } = this.props;
+    const { id } = this.state;
+    const params = {
+      class: id,
+      student: auth.user._id
+    };
+    this.setState(
+      {
+        shiftLoading: true
+      },
+      () => {
+        getShiftRooms(params, this.shiftLoadingDone, this.shiftLoadingDone);
+      }
+    );
+  };
+
+  shiftLoadingDone = () => {
+    this.setState({
+      shiftLoading: false
+    });
+  };
+
   componentDidMount() {
     this.getClassDetail();
+    this.getShiftRooms();
     this.getStudentList();
   }
 }
@@ -423,13 +494,15 @@ const mapStateToProps = state => {
   return {
     auth: state.auth,
     class: state.class,
-    classStudent: state.classStudent
+    classStudent: state.classStudent,
+    shift: state.shift
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    getClassDetail: id => dispatch(ClassActions.getClassDetail(id)),
+    getClassDetail: (id, params, onSuccess, onFailed) =>
+      dispatch(ClassActions.getClassDetail(id, params, onSuccess, onFailed)),
     getStudentList: (params, onSuccess, onFailed) =>
       dispatch(ClassStudentActions.getStudentList(params, onSuccess, onFailed)),
     updateClassStudent: (id, data, onSuccess, onFailed) =>
@@ -439,7 +512,9 @@ const mapDispatchToProps = dispatch => {
     uploadClassStudent: (id, data, onSuccess, onFailed) =>
       dispatch(
         ClassStudentActions.uploadClassStudent(id, data, onSuccess, onFailed)
-      )
+      ),
+    getShiftRooms: (params, onSuccess, onFailed) =>
+      dispatch(ShiftActions.getShiftRooms(params, onSuccess, onFailed))
   };
 };
 

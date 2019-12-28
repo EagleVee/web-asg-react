@@ -13,6 +13,22 @@ export function* getListShift(action) {
   }
 }
 
+export function* getShiftRooms(action) {
+  const { params, onSuccess, onFailed } = action;
+  const response = yield call(API.shiftRoom.get, params);
+  if (response.status) {
+    yield put(
+      ShiftActions.getShiftRoomsSuccess(
+        params.class ? params.class : "",
+        response
+      )
+    );
+    if (onSuccess) yield call(onSuccess);
+  } else {
+    if (onFailed) yield call(onFailed, response.message);
+  }
+}
+
 export function* createShift(action) {
   const { data, onSuccess, onFailed } = action;
   const response = yield call(API.shift.create, data);

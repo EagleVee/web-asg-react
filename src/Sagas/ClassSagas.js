@@ -14,8 +14,8 @@ export function* getListClass(action) {
 }
 
 export function* getClassDetail(action) {
-  const { id, onSuccess, onFailed } = action;
-  const response = yield call(API.class.getDetail, id);
+  const { id, params, onSuccess, onFailed } = action;
+  const response = yield call(API.class.getDetail, id, params);
   if (response.status) {
     yield put(ClassActions.getClassDetailSuccess(response));
     if (onSuccess) yield call(onSuccess);
