@@ -14,6 +14,8 @@ export function* startup(action) {
       const { is_alive } = response.data;
       if (is_alive) {
         yield put(AuthActions.me(callback));
+      } else {
+        yield call(callback);
       }
     } else {
       yield call(callback);

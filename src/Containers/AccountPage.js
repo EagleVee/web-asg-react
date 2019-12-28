@@ -1,11 +1,13 @@
-
 import React, { Component } from "react";
 import styles from "./Styles/AccountPage.module.css";
 import { Table, Input, Icon, Spin } from "antd";
 import { connect } from "react-redux";
-import AccountActions from "../Redux/AccountAction";
+import AccountActions from "../Redux/AccountActions";
 import ModalHelper from "../Common/ModalHelper";
 import UploadModal from "../Components/UploadModal";
+import lodash from "lodash";
+import RoleHelper from "../Common/RoleHelper";
+import UnapprovedComponent from "../Components/UnapprovedComponent";
 
 const { Search } = Input;
 
@@ -13,19 +15,22 @@ class AccountPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        file: {},
-        uploadModalVisible: false,
-        uploading: false,
-        search: ''
+      file: {},
+      uploadModalVisible: false,
+      uploading: false,
+      search: ""
     };
   }
   render() {
-    return (
+    const isAdmin = RoleHelper.isAdmin(this.props.auth.user);
+    return isAdmin ? (
       <div>
         {this.renderHeader()}
         {this.renderTable()}
         {this.renderUploadModal()}
       </div>
+    ) : (
+      <UnapprovedComponent />
     );
   }
 
@@ -33,8 +38,19 @@ class AccountPage extends Component {
     return (
       <div className={styles.header}>
         <div className={styles.headerLeft}>
-          <Search 
+          <Search
             placeholder="Tìm kiếm"
+            value={this.state.search}
+            onChange={e => {
+              this.setState(
+                {
+                  search: e.target.value
+                },
+                lodash.debounce(() => {
+                  this.getListAccount();
+                }, 1000)
+              );
+            }}
             onSearch={value => console.log(value)}
             style={{ width: 200 }}
           />
@@ -43,15 +59,15 @@ class AccountPage extends Component {
         <div className={styles.headerRight}>
           <p>Tải lên danh sách tài khoản (.xlsx)</p>
           <button
-              className={`btn ${styles.button}`}
-              onClick={event => {
+            className={`btn ${styles.button}`}
+            onClick={event => {
               event.preventDefault();
               this.setState({
-                  uploadModalVisible: true
+                uploadModalVisible: true
               });
-              }}
+            }}
           >
-              <Icon type="upload" style={{ fontSize: 20 }} />
+            <Icon type="upload" style={{ fontSize: 20 }} />
           </button>
         </div>
       </div>
@@ -72,24 +88,17 @@ class AccountPage extends Component {
       }
     ];
 
-    //const { listAccount } = this.props.account;
-    const listAccount = [
-        {
-          key: 1,
-          studentId: "17021344",
-          name: "abc"
-        }
-    ]
+    const { listAccount } = this.props.account;
 
     return (
       <Table
         columns={columns}
         dataSource={listAccount}
-        //rowKey={record => record._id}
+        rowKey={record => record._id}
       />
     );
   }
-  
+
   renderUploadModal = () => {
     const { uploadModalVisible, file, uploading } = this.state;
     const renderPreview = () => {
@@ -171,7 +180,24 @@ class AccountPage extends Component {
 
   getListAccount = () => {
     const { getListAccount } = this.props;
-    getListAccount();
+    const { search } = this.state;
+    const params = {
+      search: search
+    };
+    this.setState(
+      {
+        loading: true
+      },
+      () => {
+        getListAccount(params, this.endLoading, this.endLoading);
+      }
+    );
+  };
+
+  endLoading = () => {
+    this.setState({
+      loading: false
+    });
   };
 
   onSuccess = message => {
@@ -179,12 +205,13 @@ class AccountPage extends Component {
       {
         uploadModalVisible: false,
         uploading: false,
-        file: {} 
+        file: {}
       },
       () => {
         ModalHelper.showSuccessModal({
           content: message
         });
+        this.getListAccount();
       }
     );
   };
@@ -194,7 +221,7 @@ class AccountPage extends Component {
       {
         uploadModalVisible: false,
         uploading: false,
-        file: {} 
+        file: {}
       },
       () => {
         ModalHelper.showErrorModal({
@@ -220,8 +247,8 @@ const mapDispatchToProps = dispatch => {
   return {
     getListAccount: (params, onSuccess, onFailed) =>
       dispatch(AccountActions.getListAccount(params, onSuccess, onFailed)),
-    uploadListAccount: (params, onSuccess, onFailed) =>
-      dispatch(AccountActions.uploadListAccount(params, onSuccess, onFailed))
+    uploadListAccount: (data, onSuccess, onFailed) =>
+      dispatch(AccountActions.uploadListAccount(data, onSuccess, onFailed))
+  };
 };
-}
 export default connect(mapStateToProps, mapDispatchToProps)(AccountPage);

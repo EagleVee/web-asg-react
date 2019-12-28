@@ -111,6 +111,7 @@ class ShiftPage extends Component {
         <Table
           columns={columns}
           dataSource={this.populateShiftList()}
+          rowKey={record => record._id}
           onRow={record => {
             return {
               onClick: e => {
