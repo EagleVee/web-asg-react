@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import { Icon, Layout, Menu } from "antd";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import styles from "./Styles/Container.module.css";
 import { connect } from "react-redux";
 import AuthActions from "../Redux/AuthActions";
 import ModalHelper from "../Common/ModalHelper";
 import history from "../Navigation/History";
+import styles from "./Styles/Container.module.css";
 
 const { Sider, Content } = Layout;
 
@@ -130,9 +130,6 @@ class Container extends Component {
           </Menu.Item>
           <Menu.Item key="room">
             <Link to="/room">Danh sách phòng thi</Link>
-          </Menu.Item>
-          <Menu.Item key="exam">
-            <Link to="/exam">Lịch thi</Link>
           </Menu.Item>
         </Menu.SubMenu>
         <Menu.SubMenu
