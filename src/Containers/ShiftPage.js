@@ -8,6 +8,7 @@ import CreateShiftModal from "../Components/CreateShiftModal";
 import moment from "moment";
 import ModalHelper from "../Common/ModalHelper";
 import UploadModal from "../Components/UploadModal";
+import FormData from "form-data";
 
 class ShiftPage extends Component {
   constructor(props) {
@@ -205,7 +206,7 @@ class ShiftPage extends Component {
   };
 
   handleOkShift = (date, start, end, code, rooms) => {
-    const { createShift } = this.props;
+    const { createShift, updateShift } = this.props;
     const dateString = date.format("YYYY-MM-DD");
     const startString = start.format("HH:mm");
     const endString = end.format("HH:mm");
@@ -217,25 +218,42 @@ class ShiftPage extends Component {
       code: code,
       rooms: rooms
     };
-    this.setState(
-      {
-        creating: true
-      },
-      () => {
-        createShift(shiftData, this.createSuccess, this.createFailed);
-      }
-    );
+    if (this.state.selectedShift._id) {
+      this.setState(
+        {
+          creating: true
+        },
+        () => {
+          updateShift(
+            this.state.selectedShift._id,
+            shiftData,
+            this.createSuccess,
+            this.createFailed
+          );
+        }
+      );
+    } else {
+      this.setState(
+        {
+          creating: true
+        },
+        () => {
+          createShift(shiftData, this.createSuccess, this.createFailed);
+        }
+      );
+    }
   };
 
-  createSuccess = () => {
+  createSuccess = message => {
     this.setState(
       {
         creating: false,
-        shiftModalVisible: false
+        shiftModalVisible: false,
+        selectedShift: {}
       },
       () => {
         ModalHelper.showSuccessModal({
-          content: "Tạo ca thi thành công"
+          content: message
         });
       }
     );
@@ -245,7 +263,8 @@ class ShiftPage extends Component {
     this.setState(
       {
         creating: false,
-        shiftModalVisible: false
+        shiftModalVisible: false,
+        selectedShift: {}
       },
       () => {
         ModalHelper.showErrorModal({
@@ -267,6 +286,7 @@ class ShiftPage extends Component {
     for (const shift of listShift) {
       const { beginAt, endAt, rooms } = shift;
       const _shift = {
+        ...shift,
         date: TimeHelper.getDayFromDate(beginAt),
         begin: TimeHelper.getHourFromDate(beginAt),
         end: TimeHelper.getHourFromDate(endAt),
@@ -298,8 +318,55 @@ class ShiftPage extends Component {
   };
 
   handleOnUpload = () => {
+    this.setState(
+      {
+        uploading: true,
+        loading: true
+      },
+      () => {
+        this.uploadFile();
+      }
+    );
+  };
 
-  }
+  uploadFile = () => {
+    const { uploadShift } = this.props;
+    const { file } = this.state;
+    const formData = new FormData();
+    formData.append("file", file);
+    uploadShift(formData, this.onSuccess, this.onFailed);
+  };
+
+  onSuccess = message => {
+    this.setState(
+      {
+        uploadModalVisible: false,
+        uploading: false,
+        file: {}
+      },
+      () => {
+        ModalHelper.showSuccessModal({
+          content: message
+        });
+        this.getListShift();
+      }
+    );
+  };
+
+  onFailed = message => {
+    this.setState(
+      {
+        uploadModalVisible: false,
+        uploading: false,
+        file: {}
+      },
+      () => {
+        ModalHelper.showErrorModal({
+          content: message
+        });
+      }
+    );
+  };
 
   componentDidMount() {
     this.getListShift();
@@ -318,7 +385,11 @@ const mapDispatchToProps = dispatch => {
     getListShift: (params, onSuccess, onFailed) =>
       dispatch(ShiftActions.getListShift(params, onSuccess, onFailed)),
     createShift: (data, onSuccess, onFailed) =>
-      dispatch(ShiftActions.createShift(data, onSuccess, onFailed))
+      dispatch(ShiftActions.createShift(data, onSuccess, onFailed)),
+    uploadShift: (data, onSuccess, onFailed) =>
+      dispatch(ShiftActions.uploadShift(data, onSuccess, onFailed)),
+    updateShift: (id, data, onSuccess, onFailed) =>
+      dispatch(ShiftActions.updateShift(id, data, onSuccess, onFailed))
   };
 };
 

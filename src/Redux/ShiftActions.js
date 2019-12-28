@@ -4,7 +4,6 @@ const { Types, Creators } = createActions({
   getListShift: ["params", "onSuccess", "onFailed"],
   getListShiftSuccess: ["response"],
   updateShift: ["id", "data", "onSuccess", "onFailed"],
-  updateShiftSuccess: ["response"],
   createShift: ["data", "onSuccess", "onFailed"],
   uploadShift: ["data", "onSuccess", "onFailed"]
 });

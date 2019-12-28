@@ -17,7 +17,27 @@ export function* createShift(action) {
   const { data, onSuccess, onFailed } = action;
   const response = yield call(API.shift.create, data);
   if (response.status) {
-    if (onSuccess) yield call(onSuccess);
+    if (onSuccess) yield call(onSuccess, "Tạo ca thi thành công");
+  } else {
+    if (onFailed) yield call(onFailed, response.message);
+  }
+}
+
+export function* updateShift(action) {
+  const { id, data, onSuccess, onFailed } = action;
+  const response = yield call(API.shift.update, id, data);
+  if (response.status) {
+    if (onSuccess) yield call(onSuccess, "Cập nhật ca thi thành công");
+  } else {
+    if (onFailed) yield call(onFailed, response.message);
+  }
+}
+
+export function* uploadShift(action) {
+  const { data, onSuccess, onFailed } = action;
+  const response = yield call(API.shift.upload, data);
+  if (response.status) {
+    if (onSuccess) yield call(onSuccess, "Tải tệp lên máy chủ thành công");
   } else {
     if (onFailed) yield call(onFailed, response.message);
   }

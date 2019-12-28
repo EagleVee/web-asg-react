@@ -21,11 +21,11 @@ export default class CreateShiftModal extends Component {
       };
     } else {
       const { beginAt, endAt, rooms } = shift;
+      console.log(shift);
       const roomNames = [];
       for (const room of rooms) {
         roomNames.push(room.room.name);
       }
-      console.log(roomNames);
       return {
         date: moment.unix(beginAt),
         start: moment.unix(beginAt),
@@ -45,7 +45,7 @@ export default class CreateShiftModal extends Component {
   };
 
   static defaultProps = {
-    title: "Tạo ca thi",
+    title: "Ca thi",
     visible: false,
     onOK: () => {},
     onCancel: () => {},
@@ -186,7 +186,6 @@ export default class CreateShiftModal extends Component {
   };
 
   componentWillReceiveProps(nextProps, nextContext) {
-    console.log(this.getState(nextProps));
     this.setState(this.getState(nextProps));
   }
 }

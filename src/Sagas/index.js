@@ -22,8 +22,13 @@ import {
   updateClassStudent,
   uploadClassStudent
 } from "./ClassStudentSagas";
-import { createShift, getListShift } from "./ShiftSagas";
-import {createRoom, getListRoom, updateRoom, uploadRoom} from "./RoomSagas";
+import {
+  createShift,
+  getListShift,
+  updateShift,
+  uploadShift
+} from "./ShiftSagas";
+import { createRoom, getListRoom, updateRoom, uploadRoom } from "./RoomSagas";
 
 export default function* root() {
   yield takeLatest(StartupTypes.STARTUP, startup);
@@ -40,10 +45,10 @@ export default function* root() {
   yield takeLatest(ClassStudentTypes.UPLOAD_CLASS_STUDENT, uploadClassStudent);
   yield takeLatest(ShiftTypes.GET_LIST_SHIFT, getListShift);
   yield takeLatest(ShiftTypes.CREATE_SHIFT, createShift);
+  yield takeLatest(ShiftTypes.UPDATE_SHIFT, updateShift);
+  yield takeLatest(ShiftTypes.UPLOAD_SHIFT, uploadShift);
   yield takeLatest(RoomTypes.GET_LIST_ROOM, getListRoom);
   yield takeLatest(RoomTypes.UPLOAD_ROOM, uploadRoom);
   yield takeLatest(RoomTypes.UPDATE_ROOM, updateRoom);
   yield takeLatest(RoomTypes.CREATE_ROOM, createRoom);
-
-
 }

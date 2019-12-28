@@ -44,7 +44,7 @@ const logError = error => {
     } else if (status === STATUS_INTERNAL_SERVER_ERROR) {
       return {
         data: "Mã lỗi" + status,
-        msg: "Mã lỗi" + status,
+        message: status + " - Đã có lỗi xảy ra",
         code: status
       };
     }
