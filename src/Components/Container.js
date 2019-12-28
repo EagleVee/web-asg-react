@@ -71,10 +71,13 @@ class Container extends Component {
           }
         >
           <Menu.Item key="class">
-            <Link to="/class">Danh sách đăng ký</Link>
+            <Link to="/class">Danh sách môn học</Link>
           </Menu.Item>
           <Menu.Item key="shift">
-            <Link to="/shift">Ca thi</Link>
+            <Link to="/shift">Danh sách ca thi</Link>
+          </Menu.Item>
+          <Menu.Item key="shift-registered">
+            <Link to="/shift/registered">Đã đăng ký</Link>
           </Menu.Item>
         </Menu.SubMenu>
         <Menu.SubMenu
@@ -126,7 +129,7 @@ class Container extends Component {
             <Link to="/class">Danh sách môn học</Link>
           </Menu.Item>
           <Menu.Item key="shift">
-            <Link to="/shift">Ca thi</Link>
+            <Link to="/shift">Danh sách ca thi</Link>
           </Menu.Item>
           <Menu.Item key="room">
             <Link to="/room">Danh sách phòng thi</Link>

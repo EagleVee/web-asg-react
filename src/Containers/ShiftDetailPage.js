@@ -2,26 +2,23 @@ import React, { Component } from "react";
 import styles from "./Styles/ShiftDetailPage.module.css";
 import { Table, Button, Icon, Spin } from "antd";
 import { connect } from "react-redux";
-import FormData from "form-data";
 import ShiftActions from "../Redux/ShiftActions";
-import ModalHelper from "../Common/ModalHelper";
-import UploadModal from "../Components/UploadModal";
+import RoleHelper from "../Common/RoleHelper";
+import TimeHelper from "../Common/TimeHelper";
 
 class ShiftDetailPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       file: {},
-      uploadModalVisible: false,
-      uploading: false
+      loading: false
     };
   }
   render() {
     return (
       <div>
         {this.renderHeader()}
-        {this.renderTable()}
-        {this.renderUploadModal()}
+        {this.renderRoomList()}
       </div>
     );
   }
@@ -45,171 +42,145 @@ class ShiftDetailPage extends Component {
     );
   }
 
-  renderTable() {
+  renderRoomList() {
+    const isStudent = RoleHelper.isStudent(this.props.auth.user);
+    if (!isStudent) {
+      return <div />;
+    }
+
     const columns = [
       {
-        title: "Phòng thi",
-        dataIndex: "room",
-        key: "room"
+        title: "Ngày thi",
+        dataIndex: "date",
+        key: "date"
       },
       {
-        title: "Tên môn học",
-        dataIndex: "name",
-        key: "name"
+        title: "Bắt đầu",
+        dataIndex: "begin",
+        key: "begin"
       },
-
+      {
+        title: "Kết thúc",
+        dataIndex: "end",
+        key: "end"
+      },
+      {
+        title: "Phòng thi",
+        dataIndex: "roomName",
+        key: "roomName"
+      },
+      {
+        title: "Đăng ký",
+        dataIndex: "register",
+        key: "register",
+        render: (text, record) => {
+          const { registered } = record;
+          let displayText = registered === false ? "Đăng ký" : "Hủy đăng ký";
+          let className =
+            registered === false ? "btn btn-success" : "btn btn-danger";
+          return (
+            <button
+              onClick={() => {
+                this.handleOnRegister(record);
+              }}
+              className={className}
+            >
+              <p>{displayText}</p>
+            </button>
+          );
+        }
+      }
     ];
 
-    const { listShiftDetail } = this.props.shiftDetail;
-
     return (
-      <Table
-        columns={columns}
-        dataSource={listShiftDetail}
-        rowKey={record => record._id}
-        onRow={(record, index) => {
-          return {
-            onClick: event => {
-              event.preventDefault();
-              this.props.history.push("/shiftDetail/" + record._id);
-            }
-          };
-        }}
-      />
+      <Spin spinning={this.state.loading}>
+        <Table
+          columns={columns}
+          dataSource={this.populateShiftRooms()}
+          rowKey={record => record.id}
+        />
+      </Spin>
     );
   }
 
-  renderUploadModal = () => {
-    const { uploadModalVisible, file, uploading } = this.state;
-    const renderPreview = () => {
-      if (!file.name) {
-        return <div />;
-      }
-      return (
-        <div className={styles.previewContainer}>
-          <p className={styles.previewText}>{file.name}</p>
-          <button
-            className="btn text-danger"
-            onClick={event => {
-              event.preventDefault();
-              this.setState({
-                file: {}
-              });
-            }}
-          >
-            <Icon type="close" style={{ fontSize: 14, marginBottom: 10 }} />
-          </button>
-        </div>
-      );
+  populateShiftRooms = () => {
+    let result = [];
+    const { registeredRooms } = this.props.shift;
+    for (const shiftRoom of registeredRooms) {
+      const { room, shift } = shiftRoom;
+      const { beginAt, endAt } = shift;
+      const { name } = room;
+      const data = {
+        ...shiftRoom,
+        date: TimeHelper.getDayFromDate(beginAt),
+        begin: TimeHelper.getHourFromDate(beginAt),
+        end: TimeHelper.getHourFromDate(endAt),
+        roomName: name
+      };
+
+      result.push(data);
+    }
+    return result;
+  };
+
+  getRegisteredRooms = () => {
+    const { getRegisteredRooms, auth } = this.props;
+    const params = {
+      student: auth.user._id
     };
-    return (
-      <UploadModal
-        visible={uploadModalVisible}
-        onUpload={this.handleOnUpload}
-        onCancel={() => {
-          this.setState({
-            uploadModalVisible: false
-          });
-        }}
-      >
-        <Spin spinning={uploading}>
-          <label>
-            Chọn tệp từ máy tính
-            <input
-              type="file"
-              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-              className="d-none"
-              onChange={event => {
-                if (event.target.files && event.target.files.length > 0) {
-                  this.setState({
-                    file: event.target.files[0]
-                  });
-                }
-              }}
-            />
-            <Icon
-              type="upload"
-              style={{ fontSize: 20 }}
-              className={`btn ${styles.button}`}
-            />
-          </label>
-          {renderPreview()}
-        </Spin>
-      </UploadModal>
-    );
-  };
-
-  handleOnUpload = () => {
     this.setState(
       {
-        uploading: true
+        loading: true
       },
       () => {
-        this.uploadFile();
+        getRegisteredRooms(params, this.endLoading, this.endLoading);
       }
     );
   };
 
-  uploadFile = () => {
-    const { uploadListClass } = this.props;
-    const { file } = this.state;
-    const formData = new FormData();
-    formData.append("file", file);
-    uploadListShiftDetail(formData, this.onSuccess, this.onFailed);
+  endLoading = () => {
+    this.setState({
+      loading: true
+    });
   };
 
-  getListShiftDetail = () => {
-    const { getListShiftDetail } = this.props;
-    getListShiftDetail();
-  };
-
-  onSuccess = message => {
+  handleOnRegister = record => {
+    const { studentRegister, auth } = this.props;
+    const { room, shift } = record;
+    const data = {
+      student: auth.user._id,
+      newRoom: room._id,
+      shift: shift._id,
+      register: false
+    };
     this.setState(
       {
-        uploadModalVisible: false,
-        uploading: false,
-        file: {}
+        shiftLoading: true
       },
       () => {
-        ModalHelper.showSuccessModal({
-          content: message
-        });
-      }
-    );
-  };
-
-  onFailed = message => {
-    this.setState(
-      {
-        uploadModalVisible: false,
-        uploading: false,
-        file: {}
-      },
-      () => {
-        ModalHelper.showErrorModal({
-          content: message
-        });
+        studentRegister(data, this.registerSuccess, this.registerFailed);
       }
     );
   };
 
   componentDidMount() {
-    this.getListClass();
+    this.getRegisteredRooms();
   }
 }
 
 const mapStateToProps = state => {
   return {
-    auth: state.auth
+    auth: state.auth,
+    shift: state.shift
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    getListShiftDetail: (params, onSuccess, onFailed) =>
-      dispatch(ShiftActions.getListShiftDetail(params, onSuccess, onFailed)),
-    uploadListShiftDetail: (data, onSuccess, onFailed) =>
-      dispatch(ShiftActions.uploadListShiftDetail(data, onSuccess, onFailed))
+    getRegisteredRooms: (params, onSuccess, onFailed) =>
+      dispatch(ShiftActions.getRegisteredRooms(params, onSuccess, onFailed)),
+    studentRegister: (data, onSuccess, onFailed) =>
+      dispatch(ShiftActions.studentRegister(data, onSuccess, onFailed))
   };
 };
 

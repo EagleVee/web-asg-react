@@ -15,6 +15,7 @@ import LoadingIndicator from "../Components/LoadingIndicator";
 import ClassDetailPage from "./ClassDetailPage";
 import RoomPage from "./RoomPage";
 import AccountPage from "./AccountPage";
+import ShiftDetailPage from "./ShiftDetailPage";
 
 class RootContainer extends Component {
   constructor(props) {
@@ -76,6 +77,12 @@ class RootContainer extends Component {
               exact
               path="/account/manage"
               component={AccountPage}
+              isAuthenticated={isAuthenticated}
+            />
+            <PrivateRoute
+              exact
+              path="/shift/registered"
+              component={ShiftDetailPage}
               isAuthenticated={isAuthenticated}
             />
           </Container>

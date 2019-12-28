@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 import styles from "./Styles/LoginPage.module.css";
 import LoginImage from "../Images/login.png";
 import AuthActions from "../Redux/AuthActions";

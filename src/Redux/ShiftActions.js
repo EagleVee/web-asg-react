@@ -11,7 +11,9 @@ const { Types, Creators } = createActions({
   uploadListShiftDetail: ["params", "onSuccess", "onFailed"],
   getShiftRooms: ["params", "onSuccess", "onFailed"],
   getShiftRoomsSuccess: ["classId", "response"],
-  studentRegister: ["data", "onSuccess", "onFailed"]
+  studentRegister: ["data", "onSuccess", "onFailed"],
+  getRegisteredRooms: ["params", "onSuccess", "onFailed"],
+  getRegisteredRoomsSuccess: ["response"]
 });
 
 export const ShiftTypes = Types;
