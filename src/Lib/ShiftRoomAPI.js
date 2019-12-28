@@ -6,6 +6,11 @@ const API = {
     const queryString = qs.stringify(params);
     return GET(path + "?" + queryString);
   },
+  getRegisteredRoom: (params = {}) => {
+    const path = "/shift-room/register";
+    const queryString = qs.stringify(params);
+    return GET(path + "?" + queryString);
+  },
   getDetail: (id, params) => {
     const path = "/shift-room/" + id;
     const queryString = qs.stringify(params);

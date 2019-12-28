@@ -26,6 +26,7 @@ import {
 import {
   createShift,
   getListShift,
+  getRegisteredRooms,
   getShiftRooms,
   studentRegister,
   updateShift,
@@ -53,6 +54,7 @@ export default function* root() {
   yield takeLatest(ShiftTypes.UPLOAD_SHIFT, uploadShift);
   yield takeLatest(ShiftTypes.GET_SHIFT_ROOMS, getShiftRooms);
   yield takeLatest(ShiftTypes.STUDENT_REGISTER, studentRegister);
+  yield takeLatest(ShiftTypes.GET_REGISTERED_ROOMS, getRegisteredRooms);
   yield takeLatest(RoomTypes.GET_LIST_ROOM, getListRoom);
   yield takeLatest(RoomTypes.UPLOAD_ROOM, uploadRoom);
   yield takeLatest(RoomTypes.UPDATE_ROOM, updateRoom);

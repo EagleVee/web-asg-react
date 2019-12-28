@@ -29,6 +29,17 @@ export function* getShiftRooms(action) {
   }
 }
 
+export function* getRegisteredRooms(action) {
+  const { params, onSuccess, onFailed } = action;
+  const response = yield call(API.shiftRoom.getRegisteredRoom, params);
+  if (response.status) {
+    yield put(ShiftActions.getRegisteredRoomsSuccess(response));
+    if (onSuccess) yield call(onSuccess);
+  } else {
+    if (onFailed) yield call(onFailed);
+  }
+}
+
 export function* createShift(action) {
   const { data, onSuccess, onFailed } = action;
   const response = yield call(API.shift.create, data);
