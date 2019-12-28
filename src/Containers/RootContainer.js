@@ -14,6 +14,7 @@ import PrivateRoute from "../Navigation/PrivateRoute";
 import LoadingIndicator from "../Components/LoadingIndicator";
 import ClassDetailPage from "./ClassDetailPage";
 import RoomPage from "./RoomPage";
+import AccountPage from "./AccountPage";
 
 class RootContainer extends Component {
   constructor(props) {
@@ -59,6 +60,12 @@ class RootContainer extends Component {
               exact
               path="/room"
               component={RoomPage}
+              isAuthenticated={isAuthenticated}
+            />
+            <PrivateRoute
+              exact
+              path="/account/manage"
+              component={AccountPage}
               isAuthenticated={isAuthenticated}
             />
           </Container>
