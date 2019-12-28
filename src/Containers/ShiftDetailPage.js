@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import ShiftActions from "../Redux/ShiftActions";
 import RoleHelper from "../Common/RoleHelper";
 import TimeHelper from "../Common/TimeHelper";
+import ModalHelper from "../Common/ModalHelper";
 
 class ShiftDetailPage extends Component {
   constructor(props) {
@@ -140,7 +141,7 @@ class ShiftDetailPage extends Component {
 
   endLoading = () => {
     this.setState({
-      loading: true
+      loading: false
     });
   };
 
@@ -155,12 +156,28 @@ class ShiftDetailPage extends Component {
     };
     this.setState(
       {
-        shiftLoading: true
+        loading: true
       },
       () => {
         studentRegister(data, this.registerSuccess, this.registerFailed);
       }
     );
+  };
+
+  registerSuccess = () => {
+    ModalHelper.showSuccessModal({
+      content: "Hủy ca thi thành công"
+    });
+    this.getRegisteredRooms();
+  };
+
+  registerFailed = () => {
+    this.setState({
+      loading: false
+    });
+    ModalHelper.showErrorModal({
+      content: "Đã có lỗi xảy ra, vui lòng thử lại"
+    });
   };
 
   componentDidMount() {
