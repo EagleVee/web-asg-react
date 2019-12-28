@@ -131,6 +131,9 @@ class Container extends Component {
           <Menu.Item key="room">
             <Link to="/room">Danh sách phòng thi</Link>
           </Menu.Item>
+          <Menu.Item key="exam">
+            <Link to="/exam">Lịch thi</Link>
+          </Menu.Item>
         </Menu.SubMenu>
         <Menu.SubMenu
           key="2"
