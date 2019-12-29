@@ -282,7 +282,8 @@ class ShiftPage extends Component {
 
   closeShiftModal = () => {
     this.setState({
-      shiftModalVisible: false
+      shiftModalVisible: false,
+      selectedShift: {}
     });
   };
 
