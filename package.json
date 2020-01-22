@@ -14,12 +14,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/EagleVee/violetpham-react.git"
+    "url": "git+https://github.com/EagleVee/cvreact.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/EagleVee/violetpham-react/issues"
+    "url": "https://github.com/EagleVee/cvreact/issues"
   },
   "homepage": "/",
   "dependencies": {
